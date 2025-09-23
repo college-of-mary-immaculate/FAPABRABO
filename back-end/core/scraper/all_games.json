@@ -1,0 +1,73 @@
+[
+  {
+    "name": "Stellaris",
+    "genre": [
+      "Space",
+      "Strategy",
+      "Grand Strategy",
+      "Sci-fi",
+      "4X",
+      "Exploration",
+      "Sandbox",
+      "Simulation",
+      "Multiplayer",
+      "Real-Time with Pause",
+      "Singleplayer",
+      "Moddable",
+      "Management",
+      "Diplomacy",
+      "Military",
+      "Futuristic",
+      "Replay Value",
+      "Great Soundtrack",
+      "Procedural Generation",
+      "Atmospheric",
+      "+"
+    ],
+    "description": "Explore a galaxy full of wonders in this sci-fi grand strategy game from Paradox Development Studios. Interact with diverse alien races, discover strange new worlds with unexpected events and expand the reach of your empire. Each new adventure holds almost limitless possibilities.",
+    "publisher": "Paradox Interactive",
+    "url": "https://store.steampowered.com/app/281990/Stellaris/",
+    "image": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/281990/ed3c8f767f24ce2e87d6e475c1909e08190bb014/header_alt_assets_9.jpg?t=1758545881"
+  },
+  {
+    "name": "Vampire: The Masquerade – Bloodlines 2",
+    "genre": [
+      "Action",
+      "RPG"
+    ],
+    "description": "Sired in an act of vampire insurrection, your existence ignites the war for Seattle's blood trade. Enter uneasy alliances with the creatures who control the city and uncover the sprawling conspiracy which plunged Seattle into a bloody civil war between powerful vampire factions. \n♞Become the Ultimate Vampire \nImmerse yourself in the World of Darkness and live out your vampire fantasy in a city filled with intriguing characters that react to your choices. You and your unique disciplines are a weapon in our forward-driving, fast-moving,…",
+    "publisher": "Paradox Interactive",
+    "url": "https://rawg.io/games/vampire-the-masquerade-bloodlines-2",
+    "image": "https://media.rawg.io/media/crop/600/400/stories-previews/30f/30f79646f4ddaa689a5f682042d5526a.jpg"
+  },
+  {
+    "name": "Delta Force",
+    "genre": [
+      "Free to Play",
+      "FPS",
+      "Multiplayer",
+      "Extraction Shooter",
+      "Singleplayer",
+      "Co-op",
+      "Shooter",
+      "Massively Multiplayer",
+      "PvP",
+      "PvE",
+      "Action",
+      "First-Person",
+      "Looter Shooter",
+      "Online Co-Op",
+      "Gun Customization",
+      "Tactical",
+      "Hero Shooter",
+      "Military",
+      "Co-op Campaign",
+      "Team-Based",
+      "+"
+    ],
+    "description": "Delta Force is back! The iconic series returns as the definitive free-to-play modern team-based tactical shooter and featuring three distinct gameplay modes: large-scale PvP warfare, intense extraction shooter action, and a remake of the legendary Black Hawk Down campaign.",
+    "publisher": "TiMi Studio Group",
+    "url": "https://store.steampowered.com/app/2507950/Delta_Force/",
+    "image": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2507950/d98b71456e101ccba0391b72f4d202ffe20cdf80/header_alt_assets_5.jpg?t=1758592879"
+  }
+]
