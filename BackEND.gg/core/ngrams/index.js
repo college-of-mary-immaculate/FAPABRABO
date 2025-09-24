@@ -1,3 +1,0 @@
-import { NGrams } from "./model"
-
-
