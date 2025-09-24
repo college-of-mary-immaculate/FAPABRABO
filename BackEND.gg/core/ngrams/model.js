@@ -13,7 +13,7 @@ class NGrams {
     map.set(key, (map.get(key) || 0) + 1);
   }
 
-  process(filePath = "bitEngine/data/sentences/eng_sentences.txt") {
+  process(filePath = "") {
     if (!fs.existsSync(filePath)) {
       throw new Error(`${filePath} does not exist.`);
     }
