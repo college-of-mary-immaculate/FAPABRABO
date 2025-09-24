@@ -30,6 +30,8 @@ print("This is wordDictB",wordDictB)
 
 pd.DataFrame([wordDictA, wordDictB])
 
+
+# The function computeTF computes the TF score for each word in the corpus, by document.
 def computeTF(wordDict, bow):
     tfDict = {}
     bowCount = len(bow)
@@ -43,6 +45,7 @@ tfBowB = computeTF(wordDictB, bowB)
 print("This is tfBowA", tfBowA)
 print("This is tfBow", tfBowB)
 
+# The function computeIDF computes the IDF score of every word in the corpus.
 def computeIDF(docList):
     import math
     idfDict = {}
@@ -61,6 +64,7 @@ def computeIDF(docList):
 
 idfs = computeIDF([wordDictA, wordDictB])
 
+# The function computeTFIDF below computes the TF-IDF score for each word, by multiplying the TF and IDF scores.
 def computeTFIDF(tfBow, idfs):
     tfidf = {}
     for word, val in tfBow.items():
