@@ -10,5 +10,9 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "csv-parse": "^6.1.0",
+    "json2csv": "^6.0.0-alpha.2"
+  }
 }

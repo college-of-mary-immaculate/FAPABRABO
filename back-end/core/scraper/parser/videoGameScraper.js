@@ -23,9 +23,9 @@ export const RAWGScraper = {
   pattern: /rawg\.io/,
   scrape: ($, url) => {
     const name = $("h1[itemprop='name'].heading_1.game__title").text().trim() || null;
-    const description = $("div[itemprop='description'].game__about-text span").first().text().trim() || null;
-    
 
+    const description = $("div[itemprop='description'].game__about-text span") .text().trim() ||
+  null;
     
     const genre = [];
       $("div.game__meta-block")
@@ -35,7 +35,7 @@ export const RAWGScraper = {
           genre.push($(el).text().trim());
         });
 
-    const publisher = $("meta[itemprop='publisher']").attr("content") || null;
+    const publisher = $("meta[itemprop='publisher']").attr("content") || $("a.game__meta-filter-link[href*='/publishers/']").first().text().trim() || null;
 
 
 
