@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAPABRABO</title>
+    <link rel="stylesheet" href="App.css">
+</head>
+<body>
+    <header class="header">
+        <div class="logo">GAMEGLE</div>
+        <div class="search-bar">
+            <input type="text" placeholder="Search Games">
+        </div>
+        <div class="search-dropdown" id="searchDropdown">
+                <div class="search-suggestion"></div>
+                <span class="suggestion-text">games</span>
+            </div>
+    </header>
+
+    <div class="container">
+        <main class="main-content">
+            <div class="page-header">
+                <h1 class="page-title">Popular Games</h1>
+            </div>
+
+            <div class="games-grid">
+                <div class="game-card">
+                    <div class="game-image">
+                        <div class="game-rating">
+                            <div class="rating-icon rating-positive"></div>
+                            <div class="rating-icon rating-mixed"></div>
+                            <div class="rating-icon rating-negative"></div>
+                        </div>
+                    </div>
+                    <div class="game-info">
+                        <h3 class="game-title">
+                            <span class="heart-icon"></span>
+                        </h3>
+                        <div class="game-meta"></div>
+                        <div class="game-stats">
+                            <span class="stat-item"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="game-card">
+                    <div class="game-image fall-guys">
+                        <div class="game-rating">
+                            <div class="rating-icon rating-positive"></div>
+                            <div class="rating-icon rating-positive"></div>
+                            <div class="rating-icon rating-mixed"></div>
+                        </div>
+                    </div>
+                    <div class="game-info">
+                        <h3 class="game-title">
+                            <span class="trophy-icon"></span>
+                        </h3>
+                        <div class="game-stats">
+                            <span class="stat-item"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="game-card">
+                    <div class="game-image last-of-us">
+                        <div class="game-rating">
+                            <div class="rating-icon rating-positive"></div>
+                            <div class="rating-icon rating-positive"></div>
+                            <div class="rating-icon rating-positive"></div>
+                        </div>
+                    </div>
+                    <div class="game-info">
+                        <h3 class="game-title">
+                        </h3>
+                        <div class="game-stats">
+                          
+                        </div>
+                    </div>
+                </div>
+                <div class="game-card">
+                    <div class="game-image black-mesa">
+                        <div class="game-rating">
+                            <div class="rating-icon rating-positive"></div>
+                        </div>
+                    </div>
+                    <div class="game-info">
+                        <h3 class="game-title">
+                        </h3>
+                        <div class="game-meta"></div>
+                    </div>
+                </div>
+
+              
+        </main>
+    </div>
+    <script>
+       const searchInput = document.getElementById('searchInput');
+        const searchDropdown = document.getElementById('searchDropdown');
+        const clearBtn = document.getElementById('clearBtn');
+
+        searchInput.addEventListener('input', function() {
+            if (this.value.length > 0) {
+                searchDropdown.classList.add('show');
+                clearBtn.classList.add('show');
+            } else {
+                searchDropdown.classList.remove('show');
+                clearBtn.classList.remove('show');
+            }
+        });
+
+        searchInput.addEventListener('focus', function() {
+            if (this.value.length > 0) {
+                searchDropdown.classList.add('show');
+            }
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.search-bar')) {
+                searchDropdown.classList.remove('show');
+            }
+        });
+
+        clearBtn.addEventListener('click', function() {
+            searchInput.value = '';
+            searchDropdown.classList.remove('show');
+            this.classList.remove('show');
+            searchInput.focus();
+        });
+
+        // Handle suggestion clicks
+        document.querySelectorAll('.search-suggestion').forEach(suggestion => {
+            suggestion.addEventListener('click', function() {
+                const text = this.getAttribute('data-text');
+                searchInput.value = text;
+                searchDropdown.classList.remove('show');
+            });
+        });
+    </script>
+</body>
+</html>
