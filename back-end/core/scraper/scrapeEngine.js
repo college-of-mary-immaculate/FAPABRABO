@@ -81,9 +81,13 @@ async function scrapeAllGames(urls) {
 // Example usage
 //NOTE: mostly more compatible sa rawg.io and steampowered eme eme
 const urls = [
-  "https://store.steampowered.com/app/281990/Stellaris/",
-  "https://rawg.io/games/vampire-the-masquerade-bloodlines-2",
-  "https://store.steampowered.com/app/2507950/Delta_Force/"
-];
+    "https://rawg.io/games/ninja-gaiden-ragebound",
+    "https://rawg.io/games/project-echoes-of-the-end",
+    "https://rawg.io/games/lord-of-the-rings-the-white-council",
+    "https://rawg.io/games/mycopunk",
+    "https://rawg.io/games/artis-impact",
+    "https://rawg.io/games/killing-floor-3",
+    "https://rawg.io/games/static-dread-the-lighthouse",
+    "https://rawg.io/games/stronghold-crusader-definitive-edition"];
 
 scrapeAllGames(urls);

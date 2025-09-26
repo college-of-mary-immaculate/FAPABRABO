@@ -69,5 +69,233 @@
     "publisher": "TiMi Studio Group",
     "url": "https://store.steampowered.com/app/2507950/Delta_Force/",
     "image": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2507950/d98b71456e101ccba0391b72f4d202ffe20cdf80/header_alt_assets_5.jpg?t=1758592879"
+  },
+  {
+    "name": "Dying Light: The Beast",
+    "genre": [
+      "Action Games",
+      "Action",
+      "Adventure",
+      "RPG"
+    ],
+    "description": "You are Kyle Crane, and after years of brutal experiments, you want revenge. Experience a unique blend of open world and survival horror as you hunt down the man who transformed you into half man, half beast.",
+    "publisher": "Techland",
+    "url": "https://store.steampowered.com/app/3008130/Dying_Light_The_Beast/",
+    "image": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3008130/cc54d8961d51eab78fd3fb8507a866a621c2a025/header.jpg?t=1758469753"
+  },
+  {
+    "name": "Marvel's Spider-Man 2",
+    "genre": [
+      "Action Games",
+      "Action",
+      "Adventure"
+    ],
+    "description": "Be Greater. Together. The incredible power of the symbiote forces Peter Parker and Miles Morales into a desperate fight as they balance their lives, friendships, and their duty to protect in an exciting chapter of the critically acclaimed Spider-Man franchise on PC.",
+    "publisher": "PlayStation Publishing LLC",
+    "url": "https://store.steampowered.com/app/2651280/Marvels_SpiderMan_2/",
+    "image": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2651280/header.jpg?t=1750954033"
+  },
+  {
+    "name": "Eclipsium",
+    "genre": [
+      "Adventure Games",
+      "Adventure",
+      "Indie"
+    ],
+    "description": "Longing for light, a sunless world begins devouring itself. Every step shifts the landscape beneath you as you search for what remains of her.",
+    "publisher": "CRITICAL REFLEX",
+    "url": "https://store.steampowered.com/app/2419670/Eclipsium/",
+    "image": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2419670/a71202a445d1998bedee5e1ef5c5f8835d3e2e5d/header.jpg?t=1758294201"
+  },
+  {
+    "name": "Trails in the Sky 1st Chapter",
+    "genre": [
+      "RPG Games",
+      "Action",
+      "Adventure",
+      "RPG"
+    ],
+    "description": "Trails in the Sky 1st Chapter reimagines the first chapter of a beloved series, infusing it with enhanced visuals and refined gameplay. Join Estelle and Joshua, partners bound by fate, as they unravel dark conspiracies threatening the peace of the Liberl Kingdom.",
+    "publisher": "GungHo Online Entertainment America, Inc.",
+    "url": "https://store.steampowered.com/app/3375780/Trails_in_the_Sky_1st_Chapter/",
+    "image": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3375780/header.jpg?t=1758752307"
+  },
+  {
+    "name": "GRANDIA HD Remaster",
+    "genre": [
+      "RPG Games",
+      "Adventure",
+      "RPG"
+    ],
+    "description": "GRANDIA HD Remaster brings enhanced visuals to both gameplay and cinematic videos.",
+    "publisher": "GungHo Online Entertainment America, Inc.",
+    "url": "https://store.steampowered.com/app/1034860/GRANDIA_HD_Remaster/",
+    "image": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1034860/header.jpg?t=1740709240"
+  },
+  {
+    "name": "LET IT DIE: INFERNO",
+    "genre": [
+      "Action Games",
+      "Action"
+    ],
+    "description": "Hell Gate tore open the earth! Deep within its chaotic depths, where time and space warp, lies the &quot;Eye of the Reaper&quot;—a treasure granting world-ruling power. You are an immortal Raider. Descend into the abyss, conquer the Reaper's challenge, and seize your future from the bottom of Hell!",
+    "publisher": "GungHo Online Entertainment, Inc.",
+    "url": "https://store.steampowered.com/app/2576150/LET_IT_DIE_INFERNO/",
+    "image": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2576150/21d0a7652261668302ccbdb2462b7151c71d5afb/header.jpg?t=1758855466"
+  },
+  {
+    "name": "Heroes of Hammerwatch II",
+    "genre": [
+      "Action Games",
+      "Action",
+      "Indie",
+      "RPG"
+    ],
+    "description": "A rogue-lite action-rpg that offers extensive persistent progression. Build your town, upgrade and equip your heroes, before taking on the the ever-changing Dark Citadel - either solo or with a team of friends.",
+    "publisher": "Team17",
+    "url": "https://store.steampowered.com/app/619820/Heroes_of_Hammerwatch_II/",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/619820/header.jpg?t=1758210397"
+  },
+  {
+    "name": "Hades II",
+    "genre": [
+      "Action Games",
+      "Action",
+      "Indie",
+      "RPG"
+    ],
+    "description": "Battle beyond the Underworld using dark sorcery to take on the Titan of Time in this bewitching sequel to the award-winning rogue-like dungeon crawler.",
+    "publisher": "Supergiant Games",
+    "url": "https://store.steampowered.com/app/1145350/Hades_II/",
+    "image": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1145350/91ac334a2c137d08968ccc0bc474a02579602100/header.jpg?t=1758826683"
+  },
+  {
+    "name": "Hades II",
+    "genre": [
+      "Action",
+      "Adventure",
+      "RPG",
+      "Indie"
+    ],
+    "description": "The first-ever sequel from Supergiant Games builds on the best aspects of the original god-like rogue-like dungeon crawler in an all-new, action-packed, endlessly replayable experience rooted in the Underworld of Greek myth and its deep connections to the dawn of witchcraft. \nBATTLE BEYOND THE UNDERWORLD \nAs the immortal Princess of the Underworld, you'll explore a bigger, deeper mythic world, vanquishing the forces of the Titan of Time with the full might of Olympus behind you, in a sweeping story that continually unfolds through your…",
+    "publisher": "Supergiant Games",
+    "url": "https://rawg.io/games/hades-ii",
+    "image": "https://media.rawg.io/media/games/8fd/8fd2e8317849fd265ad8781c324d4ec2.jpg"
+  },
+  {
+    "name": "Sword of the Sea",
+    "genre": [
+      "Adventure",
+      "Indie"
+    ],
+    "description": "An atmospheric adventure with highspeed movement inspired by skateboarding games. Surf over a surreal landscape of waves on your Hoversword and unveil a lost ocean teeming with life. From the visionary artist behind ABZÛ, The Pathless, and Journey, and featuring a beautiful score by Austin Wintory.",
+    "publisher": "Giant Squid",
+    "url": "https://rawg.io/games/sword-of-the-sea",
+    "image": "https://media.rawg.io/media/games/96b/96bb45a0f2d767dc62f44ae77f5a2387.jpg"
+  },
+  {
+    "name": "Oxide Room 208",
+    "genre": [
+      "Action",
+      "Adventure"
+    ],
+    "description": "Eight people trapped in an old laboratory find themselves caught up in sinister circumstances as they try to survive their final moments in this action-packed, terrifying body horror game full of gore and madness. Immerse yourself in a nightmare where the boundary between flesh and insanity blurs. Oxide Room 208 challenges you to face your fears in a dark and twisted environment.  1. Chronology of a massacre. THE STORY   Oxide Room 208  tells the story of eight people who are trapped by the ruthless Doc and forced to be connected to his experiment, Oxide.…",
+    "publisher": "WildSphere",
+    "url": "https://rawg.io/games/oxide-room-208",
+    "image": "https://media.rawg.io/media/screenshots/55b/55b19cede893cef4e4dfc4707842471d.jpg"
+  },
+  {
+    "name": "Ninja Gaiden: Ragebound",
+    "genre": [
+      "Action",
+      "Adventure",
+      "Indie",
+      "Platformer"
+    ],
+    "description": "A brand-new side-scrolling entry to the NINJA GAIDEN series from the team behind Blasphemous, NINJA GAIDEN: Ragebound redefines the classic platformer saga in a spectacular, thrilling and challenging ninja adventure.",
+    "publisher": "DotEmu",
+    "url": "https://rawg.io/games/ninja-gaiden-ragebound",
+    "image": "https://media.rawg.io/media/games/40c/40c911198ddaf503afa3a9674199b906.jpg"
+  },
+  {
+    "name": "Mycopunk",
+    "genre": [
+      "Action",
+      "Shooter",
+      "Indie"
+    ],
+    "description": "A ragtag squad of robot rejects is hired by the SAXON corporation and given one last shot at profitable glory (and avoiding the scrap heap). They are the New Atlas Hazard Crew, a ramshackle squad of exterminators sent to uncover the mysteries behind a planet-wide fungal catastrophe.  Embark on a series of dangerous planet-side missions to drive back the mycological menace. Could this be a simple natural disaster like they claim? And did SAXON really misfile your taxes? Or was that your own fault?   FUNGICIDAL TENDENCIES Choose from an outrageous arsenal of…",
+    "publisher": "Devolver Digital",
+    "url": "https://rawg.io/games/mycopunk",
+    "image": "https://media.rawg.io/media/screenshots/2e0/2e0721ea99ea466968c35ef501985c47.jpg"
+  },
+  {
+    "name": "Killing Floor 3",
+    "genre": [
+      "Action"
+    ],
+    "description": "It’s 2091. Join up with Nightfall, the last line of defense against megacorp Horzine’s inhuman army of monstrous zeds. The future is in your hands… if you can survive long enough to reach it.   Killing Floor 3  is the next installment in the legendary action/horror series. This intense FPS puts you in the boots of a Nightfall specialist joining forces with up to five teammates to battle waves of Zeds, earn dosh, unlock skills, and build the ultimate arsenal.  Assemble the ultimate zed extermination squad for frenzied 6-player co-op. You can also brave the battlefield alone…",
+    "publisher": "Tripwire Interactive",
+    "url": "https://rawg.io/games/killing-floor-3",
+    "image": "https://media.rawg.io/media/screenshots/295/2959907ac9aefa3657fcdc36c7e3bcf9.jpg"
+  },
+  {
+    "name": "Static Dread: The Lighthouse",
+    "genre": [
+      "Action",
+      "Adventure",
+      "Simulation",
+      "Casual",
+      "Indie"
+    ],
+    "description": "Mesmerizing tales of the sea   Strange characters   An atmosphere of unknowable horror   Multiple endings    ***  In the aftermath of a global cataclysm, the harbor authorities reactivated an ancient lighthouse, hoping to keep the seas navigable amidst the growing chaos. A lone keeper is dispatched to the forsaken island, tasked with manning the beacon. The fate of passing vessels and the nearby town now rests in his hands. Far away, a wife and daughter wait for his return.   ***  Each night, his duties grow more perilous. Mariners report encounters with creatures beyond the reach of …",
+    "publisher": "Polden Publishing",
+    "url": "https://rawg.io/games/static-dread-the-lighthouse",
+    "image": "https://media.rawg.io/media/screenshots/3e5/3e51f39496bcad348da4833fc62fae5b.jpg"
+  },
+  {
+    "name": "Echoes of the End",
+    "genre": [
+      "Action",
+      "Adventure"
+    ],
+    "description": null,
+    "publisher": "Deep Silver",
+    "url": "https://rawg.io/games/project-echoes-of-the-end",
+    "image": "https://media.rawg.io/media/games/cb8/cb8cc051fa5d65e424fd829fbd838649.jpg"
+  },
+  {
+    "name": "Tales of the Shire: A The Lord of The Rings",
+    "genre": [
+      "Simulation"
+    ],
+    "description": "Your cosy Hobbit life awaits in Tales of the Shire, a heart-warming, new, The Lord of the Rings game due out in 2024 on console and PC.",
+    "publisher": "Private Division",
+    "url": "https://rawg.io/games/lord-of-the-rings-the-white-council",
+    "image": "https://media.rawg.io/media/games/32d/32d05e08a7b667c23ea9fe019f6bff1d.jpg"
+  },
+  {
+    "name": "Artis Impact",
+    "genre": [
+      "Adventure",
+      "RPG",
+      "Casual",
+      "Indie"
+    ],
+    "description": "A Streamlined RPG Experience Each map in this post-apocalyptic world is hand-drawn from scratch. The streamlined mechanics and unique art offer a smooth and relaxing experience tailored for a story-rich single-player experience. Whether you're a newcomer or a veteran, engaging gameplay, classic turn-based combat, character growth, and bountiful exploration will pull you through this forgotten world of the future.Classic Turn-Based Combat Artis Impact's streamlined, turn-based combat allows players to meet and overcome challenges without requiring overwhelming, …",
+    "publisher": "Feuxon",
+    "url": "https://rawg.io/games/artis-impact",
+    "image": "https://media.rawg.io/media/games/03b/03b097af535135af884ce1e42266c67b.jpg"
+  },
+  {
+    "name": "Stronghold Crusader: Definitive Edition",
+    "genre": [
+      "Strategy",
+      "Simulation"
+    ],
+    "description": null,
+    "publisher": "FireFly Studios",
+    "url": "https://rawg.io/games/stronghold-crusader-definitive-edition",
+    "image": "https://media.rawg.io/media/screenshots/bec/bec6d3c0e53258a705e48bb34216fb96.jpg"
   }
 ]

@@ -6,7 +6,10 @@ export const SteamScraper = {
     const description = $("meta[property='og:description']").attr("content") || $("p").first().text().trim() || null;
 
     const genre = [];
-    $(".genre a, .app_tag, .tags a").each((i, el) => genre.push($(el).text().trim()));
+    $("a[href*='/genre/']").each((i, el) => {
+      genre.push($(el).text().trim());
+    });
+
 
     const publisher = $("a[href*='publisher'], .publisher, .dev_row a").first().text().trim() || null;
 
@@ -21,7 +24,9 @@ export const RAWGScraper = {
   scrape: ($, url) => {
     const name = $("h1[itemprop='name'].heading_1.game__title").text().trim() || null;
     const description = $("div[itemprop='description'].game__about-text span").first().text().trim() || null;
+    
 
+    
     const genre = [];
       $("div.game__meta-block")
         .has("div.game__meta-title:contains('Genre')")
@@ -30,18 +35,12 @@ export const RAWGScraper = {
           genre.push($(el).text().trim());
         });
 
-    const publisher = $("a.game__meta-filter-link[href*='/publishers/']").first().text().trim() || null;
+    const publisher = $("meta[itemprop='publisher']").attr("content") || null;
 
 
-// Try standard image first
-    const bgDiv = $("div.game-card-video-preview").first().attr("style");
 
     let image = null;
-    if (bgDiv) {
-      // Match URL inside background-image style
-      const match = bgDiv.match(/url\(["']?(.*?)["']?\)/);
-      if (match) image = match[1];
-    }
+    image = $("meta[itemprop='image']").attr("content") || null;
 
     console.log(image);
     
