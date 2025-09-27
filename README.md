@@ -87,6 +87,6 @@
 - **Outcomes:** Finalize scope, milestones, and infra plan. Create repos and CI.
 
 ### Phase 2 — Data Ingestion Pipeline  
-- **Outcomes:** Scrapers for IGN, GameSpot, PC Gamer. Website UI. Basic monitoring. 
+- **Outcomes:** Scraping in RAWG. Website UI. Basic monitoring. Naive Bayes. TF-IDF
 
 ---
