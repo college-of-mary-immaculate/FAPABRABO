@@ -1,6 +1,8 @@
+import csv
 import os
-import random
 from collections import Counter
+from levenshtein import levenshtein_distance  # ← new import
+
 
 class NGrams:
     def __init__(self):
@@ -8,29 +10,44 @@ class NGrams:
         self.bigram_counts  = Counter()
         self.trigram_counts = Counter()
         self.total_unigrams = 0
+        self.vocab = set()   # store all tokens for auto-complete
 
-    # ------------------------------------------------------------------
-    def process(self, file_path="BackEND.gg/data/ngrams/ngram_datasets.txt"):
-        if not os.path.exists(file_path):
-            raise FileNotFoundError(f"{file_path} does not exist.")
+    # ---------------------------------------------------------------
+    def process_names(self, csv_path: str):
+        """
+        Build n-gram counts from the 'name' column of the CSV file.
+        CSV header must contain: name,genre,description,publisher,url
+        """
+        if not os.path.exists(csv_path):
+            raise FileNotFoundError(csv_path)
 
-        with open(file_path, "r", encoding="utf-8") as f:
-            for line in f:
-                line = line.strip()
-                if not line:
+        game_names = []
+        with open(csv_path, newline='', encoding="utf-8-sig") as f:
+            reader = csv.DictReader(f)
+            print("CSV headers detected:", reader.fieldnames)
+            for row in reader:
+                name = (row.get("name") or "").strip().lower()
+                if not name:
                     continue
-
-                tokens = ["<s>"] + line.split() + ["<s/>"]
-
+                game_names.append(name)
+                tokens = ["<s>"] + name.split() + ["<s/>"]
                 self.unigram_counts.update(tokens)
                 self.bigram_counts.update(zip(tokens[:-1], tokens[1:]))
                 self.trigram_counts.update(zip(tokens[:-2], tokens[1:-1], tokens[2:]))
+                self.vocab.update(t for t in name.split())
 
         self.total_unigrams = sum(self.unigram_counts.values())
 
-    # ------------------------------------------------------------------
+        # Debug summary
+        print(f"Loaded {len(game_names)} game names.")
+        if game_names:
+            print("Sample names:", game_names[:5])
+        print(f"Bigram example count for ('silent','hill'): "
+              f"{self.bigram_counts.get(('silent','hill'),0)}")
+
+    # ---------------------------------------------------------------
     def unigram_prob(self, w):
-        return self.unigram_counts[w] / self.total_unigrams
+        return self.unigram_counts[w] / self.total_unigrams if self.total_unigrams else 0
 
     def bigram_prob(self, w1, w2):
         c = self.unigram_counts[w1]
@@ -41,45 +58,75 @@ class NGrams:
         return self.trigram_counts[(w1, w2, w3)] / c if c else 0
 
     def interpolated_prob(self, w1, w2, w3, λ3=0.5, λ2=0.3, λ1=0.2):
-        p_tri = self.trigram_prob(w1, w2, w3)
-        p_bi  = self.bigram_prob(w2, w3)
-        p_uni = self.unigram_prob(w3)
-        return λ3 * p_tri + λ2 * p_bi + λ1 * p_uni
+        return (λ3*self.trigram_prob(w1, w2, w3)
+                + λ2*self.bigram_prob(w2, w3)
+                + λ1*self.unigram_prob(w3))
 
-    # ------------------------------------------------------------------
-    def suggest_next(self, context: str, top_k: int = 5):
+    # ---------------------------------------------------------------
+    def autocomplete_token(self, token: str) -> str:
+        """Return the closest vocab token to the given token using Levenshtein."""
+        if token in self.vocab:
+            return token
+        best, best_dist = token, len(token)  # start with max reasonable distance
+        for v in self.vocab:
+            d = levenshtein_distance(token, v)
+            if d < best_dist:
+                best, best_dist = v, d
+        return best
+
+    def suggest_next(self, context: str, top_k: int = 5, return_corrected=False):
         """
-        Return the top_k most probable next words given the current context.
-        context: last one or two words typed by the user.
+        Suggest next tokens given current context.
+        Returns (corrected_context, suggestions) if return_corrected=True
         """
-        tokens = context.strip().split()
-        if len(tokens) >= 2:
-            w1, w2 = tokens[-2], tokens[-1]
-        elif len(tokens) == 1:
-            w1, w2 = "<s>", tokens[-1]
+        words = context.lower().strip().split()
+
+        # Auto-correct the last word
+        if words:
+            corrected_last = self.autocomplete_token(words[-1])
+            if corrected_last != words[-1]:
+                print(f"[Auto-complete] '{words[-1]}' → '{corrected_last}'")
+                words[-1] = corrected_last
+
+        corrected_context = " ".join(words)
+
+        if len(words) >= 2:
+            w1, w2 = words[-2], words[-1]
+        elif len(words) == 1:
+            w1, w2 = "<s>", words[-1]
         else:
             w1, w2 = "<s>", "<s>"
 
-        # candidate set: first look at trigrams, then bigrams, then unigrams
-        candidates = set()
-        for a, b, c in self.trigram_counts:
-            if a == w1 and b == w2:
-                candidates.add(c)
-
+        candidates = {c for a,b,c in self.trigram_counts if a == w1 and b == w2}
         if not candidates:
-            for a, b in self.bigram_counts:
-                if a == w2:
-                    candidates.add(b)
-
+            candidates = {b for a,b in self.bigram_counts if a == w2}
         if not candidates:
             candidates = set(self.unigram_counts.keys())
 
-        # score and sort
-        scored = []
-        for w3 in candidates:
-            p = self.interpolated_prob(w1, w2, w3)
-            scored.append((w3, p))
-        scored.sort(key=lambda x: x[1], reverse=True)
+        scored = [(w, self.interpolated_prob(w1, w2, w))
+                  for w in candidates if w not in ("<s>", "<s/>")]
+        results = sorted(scored, key=lambda x: x[1], reverse=True)[:top_k]
 
-        # drop sentence-end tokens in output
-        return [(w, p) for w, p in scored if w not in ("<s>", "<s/>")][:top_k]
+        return (corrected_context, results) if return_corrected else results
+
+
+# -------------------------------------------------------------------
+if __name__ == "__main__":
+    csv_file = "BackEND.gg/core/scraper/datasets/all_games.csv"  # adjust path
+    model = NGrams()
+    model.process_names(csv_file)
+
+    # Interactive suggestions
+    while True:
+        raw = input("Search (blank to quit): ").strip()
+        if not raw:
+            break
+
+        corrected, suggestions = model.suggest_next(raw, return_corrected=True)
+
+        if not suggestions:
+            print("No suggestions found.")
+        else:
+            print("Suggestions:")
+            for w, p in suggestions:
+                print(f"  {corrected} {w}  (p={p:.4f})")
