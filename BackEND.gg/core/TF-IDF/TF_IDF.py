@@ -1,81 +1,78 @@
 import pandas as pd
+import math
 
-docA = "The cat sat on my face"
-docB = "The dog sat on my bed"
+# Load dataset
+data = pd.read_csv(
+    r"C:\Users\natha\Downloads\PortableGit\FAPABRABO\BackEND.gg\core\scraper\datasets\all_games.csv"
+)
 
-bowA = docA.split(" ")
-bowB = docB.split(" ")
-print("This is bowA", bowA)
-print("This is bowB" ,  bowB)
+# Use descriptions as documents
+docs_description = data["description"].fillna("").tolist()
 
-wordSet = set(bowA).union(set(bowB))
+# Step 1: Tokenize into Bag of Words
+bow_list = [doc.split(" ") for doc in docs_description]
 
-print(wordSet)
+# Step 2: Build Vocabulary (all unique words across docs)
+wordSet = set()
+for bow in bow_list:
+    wordSet = wordSet.union(set(bow))
 
-wordDictA = dict.fromkeys(wordSet, 0) 
-wordDictB = dict.fromkeys(wordSet, 0) 
+# Step 3: Create word count dictionaries for each document
+wordDicts = []
+for bow in bow_list:
+    wordDict = dict.fromkeys(wordSet, 0)
+    for word in bow:
+        if word in wordDict:
+            wordDict[word] += 1
+    wordDicts.append(wordDict)
 
-print("This is wordDictA",  wordDictA)
-print("This is wordDictB", wordDictB)
-
-for word in bowA:
-    wordDictA[word]+=1
-    
-for word in bowB:
-    wordDictB[word]+=1
-    
-print("This is wordDictA", wordDictA)
-print("This is wordDictB",wordDictB)
-
-
-pd.DataFrame([wordDictA, wordDictB])
-
-
-# The function computeTF computes the TF score for each word in the corpus, by document.
+# Step 4: Compute TF
 def computeTF(wordDict, bow):
     tfDict = {}
     bowCount = len(bow)
     for word, count in wordDict.items():
-        tfDict[word] = count/float(bowCount)
+        tfDict[word] = count / float(bowCount) if bowCount > 0 else 0
     return tfDict
 
-tfBowA = computeTF(wordDictA, bowA)
-tfBowB = computeTF(wordDictB, bowB)
+tfList = [computeTF(wordDicts[i], bow_list[i]) for i in range(len(docs_description))]
 
-print("This is tfBowA", tfBowA)
-print("This is tfBow", tfBowB)
-
-# The function computeIDF computes the IDF score of every word in the corpus.
+# Step 5: Compute IDF
 def computeIDF(docList):
-    import math
-    idfDict = {}
-    N = len(docList)
-    
     idfDict = dict.fromkeys(docList[0].keys(), 0)
+    N = len(docList)
     for doc in docList:
         for word, val in doc.items():
             if val > 0:
                 idfDict[word] += 1
-    
     for word, val in idfDict.items():
-        idfDict[word] = math.log10(N / float(val))
-        
-    return idfDict 
+        idfDict[word] = math.log10(N / float(val)) if val > 0 else 0
+    return idfDict
 
-idfs = computeIDF([wordDictA, wordDictB])
+idfs = computeIDF(wordDicts)
 
-# The function computeTFIDF below computes the TF-IDF score for each word, by multiplying the TF and IDF scores.
+# Step 6: Compute TF-IDF
 def computeTFIDF(tfBow, idfs):
     tfidf = {}
     for word, val in tfBow.items():
-        tfidf[word] = val*idfs[word]
+        tfidf[word] = val * idfs[word]
     return tfidf
-    
-    
-tfidfBowA = computeTFIDF(tfBowA, idfs)
-tfidfBowB = computeTFIDF(tfBowB, idfs)
 
-print("This is tfidfBowA", tfidfBowA)
-print("This is tfidfBowB", tfidfBowB)
+tfidfDocs = [computeTFIDF(tfList[i], idfs) for i in range(len(docs_description))]
 
-pd.DataFrame([tfidfBowA, tfidfBowB])
+# Step 7: Put into DataFrame
+df_tfidf = pd.DataFrame(tfidfDocs)
+
+# # Add extra columns for easier reference
+# df_tfidf.insert(0, "name", data["name"])
+# df_tfidf.insert(1, "genre", data["genre"])
+# df_tfidf.insert(2, "publisher", data["publisher"])
+
+# Print sample
+print(df_tfidf.head())
+
+# Example: Check TF-IDF values for game 1
+print("Top TF-IDF words for:", data.loc[0, "name"])
+print(sorted(tfidfDocs[0].items(), key=lambda x: x[1], reverse=True)[:10])
+
+# Optional: Save to CSV
+df_tfidf.to_csv("tfidf_output.csv", index=False)
