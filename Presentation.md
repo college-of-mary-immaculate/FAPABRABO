@@ -49,3 +49,19 @@ In short, this project shows how **We can improve the gaming experience** by tur
 - Classification model works only on the categories present in the dataset.  
 
 ---
+
+---
+
+## 📌 C. System Architecture
+
+### I. Diagram of the Pipeline
+Check in this link: [View Pipeline Diagram](https://drive.google.com/file/d/1Bg5dQe1ncrtpFGLcAV8aYHp7VQxjf3Np/view?usp=drive_link)
+
+---
+
+
+
+
+
+
+
