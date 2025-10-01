@@ -2,9 +2,7 @@ import pandas as pd
 import math
 
 # Load dataset
-data = pd.read_csv(
-    r"C:\Users\natha\Downloads\PortableGit\FAPABRABO\BackEND.gg\core\scraper\datasets\all_games.csv"
-)
+data = pd.read_csv("../scraper/datasets/all_games.csv")
 
 # Use descriptions as documents
 docs_description = data["description"].fillna("").tolist()
