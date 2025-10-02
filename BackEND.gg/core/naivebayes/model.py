@@ -25,6 +25,7 @@ class GenreClassifier:
         self.word_counts = {}
         self.vocab_size = 0
 
+
     # --- Helpers -----------------------------------------------------------
     def normalize(self, text):
         text = text.lower()
