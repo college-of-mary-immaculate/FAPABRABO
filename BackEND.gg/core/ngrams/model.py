@@ -77,7 +77,7 @@ class NGrams:
     def suggest_next(self, context: str, top_k: int = 5, return_corrected=False):
         """
         Suggest next tokens given current context.
-        Returns (corrected_context, suggestions) if return_corrected=True
+        Does NOT compute probabilities; just returns candidates.
         """
         words = context.lower().strip().split()
 
@@ -90,6 +90,7 @@ class NGrams:
 
         corrected_context = " ".join(words)
 
+        # Determine context words
         if len(words) >= 2:
             w1, w2 = words[-2], words[-1]
         elif len(words) == 1:
@@ -97,36 +98,15 @@ class NGrams:
         else:
             w1, w2 = "<s>", "<s>"
 
-        candidates = {c for a,b,c in self.trigram_counts if a == w1 and b == w2}
+        # Get candidates from trigram -> bigram -> unigram
+        candidates = [c for a,b,c in self.trigram_counts if a == w1 and b == w2]
         if not candidates:
-            candidates = {b for a,b in self.bigram_counts if a == w2}
+            candidates = [b for a,b in self.bigram_counts if a == w2]
         if not candidates:
-            candidates = set(self.unigram_counts.keys())
+            candidates = list(self.unigram_counts.keys())
 
-        scored = [(w, self.interpolated_prob(w1, w2, w))
-                  for w in candidates if w not in ("<s>", "<s/>")]
-        results = sorted(scored, key=lambda x: x[1], reverse=True)[:top_k]
+        # Remove special tokens and limit top_k
+        suggestions = [w for w in candidates if w not in ("<s>", "<s/>")][:top_k]
 
-        return (corrected_context, results) if return_corrected else results
+        return (corrected_context, suggestions) if return_corrected else suggestions
 
-
-# -------------------------------------------------------------------
-if __name__ == "__main__":
-    csv_file = "BackEND.gg/core/scraper/datasets/all_games.csv"  # adjust path
-    model = NGrams()
-    model.process_names(csv_file)
-
-    # Interactive suggestions
-    while True:
-        raw = input("Search (blank to quit): ").strip()
-        if not raw:
-            break
-
-        corrected, suggestions = model.suggest_next(raw, return_corrected=True)
-
-        if not suggestions:
-            print("No suggestions found.")
-        else:
-            print("Suggestions:")
-            for w, p in suggestions:
-                print(f"  {corrected} {w}  (p={p:.4f})")
