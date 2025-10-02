@@ -21,8 +21,8 @@ class GenreClassifier:
 
     def __init__(self, alpha=1.0):
         self.alpha = alpha
-        self.class_counts = Counter()            # docs per genre
-        self.word_counts = {}                    # genre -> Counter of words
+        self.class_counts = Counter()           
+        self.word_counts = {}
         self.vocab_size = 0
 
     # --- Helpers -----------------------------------------------------------
@@ -39,8 +39,9 @@ class GenreClassifier:
         with open(filepath, "r", encoding="utf-8") as f:
             reader = csv.DictReader(f)
             for row in reader:
-                text = f"{row.get('title','')} {row.get('description','')}"
-                label = row["genre"].strip()
+                # Use genre + publisher + description as input features
+                text = f"{row.get('genre','')} {row.get('publisher','')} {row.get('description','')}"
+                label = row["genre"].strip()  
                 data.append((text, label))
 
         random.shuffle(data)
@@ -89,4 +90,3 @@ class GenreClassifier:
 
         best_genre = max(probs, key=probs.get)
         return best_genre, probs
-
