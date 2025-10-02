@@ -1,5 +1,6 @@
 import re
 
+
 stopwords = {
     "the", "is", "in", "at", "of", "a", "and", "to", "for", "on",
     "with", "as", "by", "an", "it", "that", "this", "are", "be",
@@ -9,33 +10,20 @@ stopwords = {
     "how", "why", "who", "what"
 }
 
+
+
 def normalize_numbers(text):
-    def replace_number(match):
-        num = float(match.group())
-        if num >= 1000:
-            return "<NUM_LARGE>"
-        elif num >= 100:
-            return "<NUM_MED>"
-        else:
-            return "<NUM_SMALL>"
-    return re.sub(r"\b\d+(\.\d+)?\b", replace_number, text)
+    return re.sub(r"\b\d+(\.\d+)?\b", "<NUM>", text)
 
 def normalize_urls(text):
-    def replace_url(match):
-        url = match.group()
-        domain_match = re.search(r"https?://([^/]+)", url)
-        if domain_match:
-            domain = domain_match.group(1)
-            return f"<DOMAIN:{domain}>"
-        return "<URL>"
-    return re.sub(r"http\S+|www\.\S+", replace_url, text)
+    return re.sub(r"http\S+|www\.\S+", "<URL>", text)
 
 def normalize(text):
     text = text.lower()
     text = normalize_urls(text)
-    text = re.sub(r"@\w+", "<USER>", text)
     text = normalize_numbers(text)
 
+   
     contractions = {
         "i'm": "i am", "you're": "you are", "he's": "he is", "she's": "she is",
         "it's": "it is", "we're": "we are", "they're": "they are",
@@ -44,25 +32,34 @@ def normalize(text):
         "won't": "will not", "n't": " not", "'re": " are", "'s": " is",
         "'d": " would", "'ll": " will", "'ve": " have", "'m": " am"
     }
-    for contraction, expanded in contractions.items():
-        text = re.sub(rf"\b{re.escape(contraction)}\b", expanded, text)
+    for c, e in contractions.items():
+        text = re.sub(rf"\b{re.escape(c)}\b", e, text)
 
-    text = re.sub(r"[^\w\s<>:]", "", text)
+   
+    text = re.sub(r"(?!<NUM>|<URL>)[^\w\s<>]", " ", text)
+
+    # Collapse spaces
     text = re.sub(r"\s+", " ", text)
 
     return text.strip()
 
-def tokenize(text, use_bigrams=True):
+
+
+
+def tokenize(text, use_bigrams=False, min_len=2):
+    """
+    - Normalizes text
+    - Removes stopwords
+    - Filters very short tokens
+    - Optional bigram support
+    """
     words = normalize(text).split()
-    words = [w for w in words if w not in stopwords]
+    words = [w for w in words if w not in stopwords and len(w) >= min_len]
+
     tokens = list(words)
 
     if use_bigrams:
-        for i in range(len(words) - 6):
-            tokens.append(words[i] + "_" + words[i+1])
+        bigrams = [words[i] + "_" + words[i+1] for i in range(len(words)-1)]
+        tokens.extend(bigrams)
 
     return tokens
-
-def get_ngrams(tokens, n):
-    return [tuple(tokens[i:i+n]) for i in range(len(tokens)-n+1)]
-
