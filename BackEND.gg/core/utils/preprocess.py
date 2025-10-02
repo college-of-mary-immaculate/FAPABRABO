@@ -9,10 +9,6 @@ stopwords = {
     "how", "why", "who", "what"
 }
 
-def char_escape(s):
-    special_chars = ".^$*+?{}[]\\|()"
-    return "".join("\\" + c if c in special_chars else c for c in s)
-
 def normalize_numbers(text):
     def replace_number(match):
         num = float(match.group())
@@ -66,3 +62,7 @@ def tokenize(text, use_bigrams=True):
             tokens.append(words[i] + "_" + words[i+1])
 
     return tokens
+
+def get_ngrams(tokens, n):
+    return [tuple(tokens[i:i+n]) for i in range(len(tokens)-n+1)]
+
