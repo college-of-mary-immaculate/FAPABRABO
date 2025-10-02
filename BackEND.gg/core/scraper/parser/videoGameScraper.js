@@ -24,7 +24,7 @@ export const RAWGScraper = {
   scrape: ($, url) => {
     const name = $("h1[itemprop='name'].heading_1.game__title").text().trim() || null;
 
-    const description = $("div[itemprop='description'].game__about-text span") .text().trim() ||
+    const description = $("div[itemprop='description'].game__about-text span") .text().trim() ||  $("meta[property='og:description']").attr("content") || $("p").first().text().trim()
   null;
     
     const genre = [];

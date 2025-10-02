@@ -1,7 +1,7 @@
-from .model import GenreClassifier
+from model import GenreClassifier
 
 if __name__ == "__main__":
-    DATA_FILE = "data/game_genres.csv"   # path to your dataset
+    DATA_FILE = "../scraper/datasets/all_games.csv"   # path to your dataset
 
     clf = GenreClassifier()
     test_set = clf.train(DATA_FILE, test_ratio=0.2)

@@ -17,9 +17,8 @@ const GamegleHomepage: React.FC<GamegleHomepageProps> = ({ onNavigateToGames }) 
   const [filteredGames, setFilteredGames] = useState<GameSuggestion[]>([]);
   const searchRef = useRef<HTMLDivElement>(null);
 
-  // Sample game data - you can replace this with actual data 
   const gameSuggestions: GameSuggestion[] = [
-    { id: '1', name: 'Cyberpunk 2077', category: 'RPG' },
+    { id: '1', name: 'CrazyGames', category: 'horror' },
     { id: '2', name: 'The Witcher 3', category: 'RPG' },
     { id: '3', name: 'Call of Duty', category: 'FPS' },
     { id: '4', name: 'FIFA 24', category: 'Sports' },
@@ -71,7 +70,7 @@ const GamegleHomepage: React.FC<GamegleHomepageProps> = ({ onNavigateToGames }) 
     if (onNavigateToGames) {
       onNavigateToGames();
     } else {
-      window.location.href = '/App.html';
+      window.location.href = '/';
     }
   };
 
@@ -131,13 +130,7 @@ const GamegleHomepage: React.FC<GamegleHomepageProps> = ({ onNavigateToGames }) 
           </div>
         )}
       </div>
-
-      <div className="links-container">
-        <div>
-          <a href="#" className="resource-link">Explore our website to find amazing games</a>
-        </div>
-      </div>
-    </div>
+</div>
   );
 };
 
