@@ -58,7 +58,7 @@ def tokenize(text, use_bigrams=True):
     tokens = list(words)
 
     if use_bigrams:
-        for i in range(len(words) - 1):
+        for i in range(len(words) - 6):
             tokens.append(words[i] + "_" + words[i+1])
 
     return tokens
