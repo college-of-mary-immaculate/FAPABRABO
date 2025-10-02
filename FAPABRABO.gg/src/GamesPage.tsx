@@ -11,7 +11,6 @@ interface SearchResult {
   title: string
   description: string
   thumbnail: string
-
 }
 
 interface GamesPageProps {
@@ -24,89 +23,89 @@ const GamesPage: React.FC<GamesPageProps> = ({ onNavigateToHome }) => {
   const [filteredResults, setFilteredResults] = useState<SearchResult[]>([])
   const searchRef = useRef<HTMLDivElement>(null)
 
- const searchResults: SearchResult[] = [
-  {
-    id: "1",
-    siteName: "CrazyGames",
-    siteUrl: "crazygames.com › horror › scary",
-    title: "Scary Games 😱 Play on CrazyGames",
-    description:
-      "There are various scary games you can play to get your hit of adrenaline. Some games have attracted controversy and others take inspiration from the stone-cold classics. One of those classics is...",
-    thumbnail: "/scary-horror-game-character.jpg"
-  },
-  {
-    id: "2",
-    siteName: "PC Gamer",
-    siteUrl: "pcgamer.com › games › horror",
-    title: "Don't Lie is a freaky new horror game about a reclus...",
-    description: "1 day ago - The walls have eyes. Everything has eyes. The eyes might have eyes.",
-    thumbnail: "/creepy-horror-game-scene.jpg"
-  },
-  {
-    id: "3",
-    siteName: "Activision",
-    siteUrl: "callofduty.com › games › modern-warfare",
-    title: "Call of Duty: Modern Warfare III - Official Site",
-    description: "Experience the most intense multiplayer combat yet. Join millions of players in epic battles across iconic maps. Pre-order now for exclusive content and early access to the beta.",
-    thumbnail: "/call-of-duty-thumbnail.jpg"
-  },
-  {
-    id: "4",
-    siteName: "EA Sports",
-    siteUrl: "ea.com › games › fifa › fifa-24",
-    title: "EA SPORTS FC 24 - The World's Game",
-    description: "2 days ago - Experience the beautiful game like never before with HyperMotionV technology. Play with over 19,000 players across 700+ teams in the most authentic football experience.",
-    thumbnail: "/fifa-24-thumbnail.jpg"
-  },
-  {
-    id: "5",
-    siteName: "Minecraft",
-    siteUrl: "minecraft.net › explore › games",
-    title: "Minecraft: Java & Bedrock Edition | Official Site",
-    description: "Build, explore, and survive in infinite worlds. Create anything you can imagine with blocks. Join over 140 million players in the ultimate sandbox adventure game.",
-    thumbnail: "/minecraft-thumbnail.jpg"
-  },
-  {
-    id: "6",
-    siteName: "Rockstar Games",
-    siteUrl: "rockstargames.com › games › gtav",
-    title: "Grand Theft Auto V - Rockstar Games",
-    description: "Explore the sprawling city of Los Santos and Blaine County in the ultimate open-world action-adventure game. Play through an epic story mode or dominate GTA Online with friends.",
-    thumbnail: "/gta-v-thumbnail.jpg"
-  },
-  {
-    id: "7",
-    siteName: "Epic Games",
-    siteUrl: "fortnite.com › news › latest",
-    title: "Fortnite - Battle Royale, Build & Creative Modes",
-    description: "5 hours ago - Jump into the latest season with new skins, weapons, and map changes. Squad up with friends and be the last one standing in this free-to-play battle royale sensation.",
-    thumbnail: "/fortnite-thumbnail.jpg"
-  },
-  {
-    id: "8",
-    siteName: "Innersloth",
-    siteUrl: "innersloth.com › games › among-us",
-    title: "Among Us - Play with 4-15 players online or via local WiFi",
-    description: "Who is the impostor? Play the social deduction game that took the world by storm. Complete tasks, find the impostor, or deceive your crewmates in this multiplayer party game.",
-    thumbnail: "/among-us-thumbnail.jpg"
-  },
-  {
-    id: "9",
-    siteName: "Riot Games",
-    siteUrl: "playvalorant.com › en-us › news",
-    title: "VALORANT - A 5v5 Character-Based Tactical FPS",
-    description: "1 day ago - Master unique agents with powerful abilities in this competitive shooter. Outsmart, outplay, and outshoot opponents in tactical 5v5 matches. New episode drops this week.",
-    thumbnail: "/valorant-thumbnail.jpg"
-  },
-  {
-    id: "10",
-    siteName: "Riot Games",
-    siteUrl: "leagueoflegends.com › news › game-updates",
-    title: "League of Legends - The World's Most Popular MOBA",
-    description: "3 hours ago - Choose from over 160 champions and battle in the ultimate team-based strategy game. Climb the ranks, master your champion, and compete in the most-watched esport globally.",
-    thumbnail: "/league-of-legends-thumbnail.jpg"
-  }
-];
+  const searchResults: SearchResult[] = [
+    {
+      id: "1",
+      siteName: "CrazyGames",
+      siteUrl: "crazygames.com › horror › scary",
+      title: "Scary Games 😱 Play on CrazyGames",
+      description:
+        "There are various scary games you can play to get your hit of adrenaline. Some games have attracted controversy and others take inspiration from the stone-cold classics. One of those classics is...",
+      thumbnail: "/scary-horror-game-character.jpg"
+    },
+    {
+      id: "2",
+      siteName: "PC Gamer",
+      siteUrl: "pcgamer.com › games › horror",
+      title: "Don't Lie is a freaky new horror game about a reclus...",
+      description: "1 day ago - The walls have eyes. Everything has eyes. The eyes might have eyes.",
+      thumbnail: "/creepy-horror-game-scene.jpg"
+    },
+    {
+      id: "3",
+      siteName: "Activision",
+      siteUrl: "callofduty.com › games › modern-warfare",
+      title: "Call of Duty: Modern Warfare III - Official Site",
+      description: "Experience the most intense multiplayer combat yet. Join millions of players in epic battles across iconic maps. Pre-order now for exclusive content and early access to the beta.",
+      thumbnail: "/call-of-duty-thumbnail.jpg"
+    },
+    {
+      id: "4",
+      siteName: "EA Sports",
+      siteUrl: "ea.com › games › fifa › fifa-24",
+      title: "EA SPORTS FC 24 - The World's Game",
+      description: "2 days ago - Experience the beautiful game like never before with HyperMotionV technology. Play with over 19,000 players across 700+ teams in the most authentic football experience.",
+      thumbnail: "/fifa-24-thumbnail.jpg"
+    },
+    {
+      id: "5",
+      siteName: "Minecraft",
+      siteUrl: "minecraft.net › explore › games",
+      title: "Minecraft: Java & Bedrock Edition | Official Site",
+      description: "Build, explore, and survive in infinite worlds. Create anything you can imagine with blocks. Join over 140 million players in the ultimate sandbox adventure game.",
+      thumbnail: "/minecraft-thumbnail.jpg"
+    },
+    {
+      id: "6",
+      siteName: "Rockstar Games",
+      siteUrl: "rockstargames.com › games › gtav",
+      title: "Grand Theft Auto V - Rockstar Games",
+      description: "Explore the sprawling city of Los Santos and Blaine County in the ultimate open-world action-adventure game. Play through an epic story mode or dominate GTA Online with friends.",
+      thumbnail: "/gta-v-thumbnail.jpg"
+    },
+    {
+      id: "7",
+      siteName: "Epic Games",
+      siteUrl: "fortnite.com › news › latest",
+      title: "Fortnite - Battle Royale, Build & Creative Modes",
+      description: "5 hours ago - Jump into the latest season with new skins, weapons, and map changes. Squad up with friends and be the last one standing in this free-to-play battle royale sensation.",
+      thumbnail: "/fortnite-thumbnail.jpg"
+    },
+    {
+      id: "8",
+      siteName: "Innersloth",
+      siteUrl: "innersloth.com › games › among-us",
+      title: "Among Us - Play with 4-15 players online or via local WiFi",
+      description: "Who is the impostor? Play the social deduction game that took the world by storm. Complete tasks, find the impostor, or deceive your crewmates in this multiplayer party game.",
+      thumbnail: "/among-us-thumbnail.jpg"
+    },
+    {
+      id: "9",
+      siteName: "Riot Games",
+      siteUrl: "playvalorant.com › en-us › news",
+      title: "VALORANT - A 5v5 Character-Based Tactical FPS",
+      description: "1 day ago - Master unique agents with powerful abilities in this competitive shooter. Outsmart, outplay, and outshoot opponents in tactical 5v5 matches. New episode drops this week.",
+      thumbnail: "/valorant-thumbnail.jpg"
+    },
+    {
+      id: "10",
+      siteName: "Riot Games",
+      siteUrl: "leagueoflegends.com › news › game-updates",
+      title: "League of Legends - The World's Most Popular MOBA",
+      description: "3 hours ago - Choose from over 160 champions and battle in the ultimate team-based strategy game. Climb the ranks, master your champion, and compete in the most-watched esport globally.",
+      thumbnail: "/league-of-legends-thumbnail.jpg"
+    }
+  ];
 
   useEffect(() => {
     if (searchQuery.trim()) {
@@ -186,6 +185,7 @@ const GamesPage: React.FC<GamesPageProps> = ({ onNavigateToHome }) => {
             />
           </form>
 
+
           {showDropdown && filteredResults.length > 0 && (
             <div className="search-dropdown show">
               {filteredResults.map((result) => (
@@ -194,7 +194,26 @@ const GamesPage: React.FC<GamesPageProps> = ({ onNavigateToHome }) => {
                 </div>
               ))}
             </div>
+            
           )}
+        </div>
+        <div className="button-container">
+          <button onClick={handleSearchSubmit} type="button" className="search-btn">
+            Search
+          </button>
+          <button
+            type="button"
+            className="search-btn"
+            onClick={() => {
+              if (onNavigateToGames) {
+                onNavigateToGames()
+              } else {
+                window.location.href = "/"
+              }
+            }}
+          >
+            Game
+          </button>
         </div>
       </header>
 
