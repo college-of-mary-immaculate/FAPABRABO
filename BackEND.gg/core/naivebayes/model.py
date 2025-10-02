@@ -21,11 +21,9 @@ class GenreClassifier:
 
     def __init__(self, alpha=1.0):
         self.alpha = alpha
-        self.class_counts = Counter()           
+        self.class_counts = Counter()
         self.word_counts = {}
         self.vocab_size = 0
-
-        
 
     # --- Helpers -----------------------------------------------------------
     def normalize(self, text):
