@@ -68,6 +68,46 @@ Check in this link: [View Pipeline Diagram](https://drive.google.com/file/d/1Bg5
 | **Classifier** | [Diether Pano](https://github.com/DietherPano) | Builds and evaluates classification component  |
 | **Frontend / API & Testing** | [Genniesys Bracia](https://github.com/Genniesysbracia) | Search UI / API, Test Functionality  |
 
+---
+
+## 📌 D. Pre-processing & Indexing
+- This part is for **Pre-processing Engineer**
+
+
+---
+
+## 📌 E. Representation & Retrieval (TF-IDF)
+- This part is for **Representation Engineerr**
+
+
+---
+
+## 📌 F. N-grams (Autosuggest)
+- 
+ 
+
+---
+
+## 📌 G. Classification
+- Explanation
+
+
+---
+
+## 📌 H. Search Interface Demo
+- Explanation
+
+---
+
+## 📌 I. Future Work
+- For now We dont know 
+
+
+
+---
+
+💻 *Developed by Team FAPABRABO*  
+For **CMI NLP Final Project 2025**
 
 
 
