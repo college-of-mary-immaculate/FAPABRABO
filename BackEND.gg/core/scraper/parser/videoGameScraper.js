@@ -10,12 +10,18 @@ export const SteamScraper = {
       genre.push($(el).text().trim());
     });
 
+    const tags = [];
+    $("a[href*='/tags/']").each((i, el) => {
+      tags.push($(el).text().trim());
+    });
+
+
 
     const publisher = $("a[href*='publisher'], .publisher, .dev_row a").first().text().trim() || null;
 
     const image = $(".game_header_image_full").attr("src") || $("img.cover, .game_header_image img, meta[property='og:image']").attr("src") || null;
 
-    return { name, genre, description, publisher, url, image };
+    return { name, genre, tags, description, publisher, url, image };
   }
 };
 
@@ -35,6 +41,15 @@ export const RAWGScraper = {
           genre.push($(el).text().trim());
         });
 
+    
+    const tags = [];
+    $("div.game__meta-block")
+      .has("div.game__meta-title:contains('Tags')")
+      .find("div.game__meta-text a.game__meta-filter-link")
+      .each((i, el) => {
+        tags.push($(el).text().trim());
+      });
+
     const publisher = $("meta[itemprop='publisher']").attr("content") || $("a.game__meta-filter-link[href*='/publishers/']").first().text().trim() || null;
 
 
@@ -44,7 +59,7 @@ export const RAWGScraper = {
 
     console.log(image);
     
-    return { name, genre, description, publisher, url, image };
+    return { name, genre, tags, description, publisher, url, image };
   }
 };
 
