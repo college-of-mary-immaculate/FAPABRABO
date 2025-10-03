@@ -5,10 +5,8 @@ import re
 import ast
 from collections import Counter
 
-
 class GenreClassifier:
-    STOPWORDS = {
-        "a","an","the","and","or","but","if","while","for","to","of","at","by","from",
+    STOPWORDS = {"a","an","the","and","or","but","if","while","for","to","of","at","by","from",
         "on","off","in","out","over","under","with","as","about","after","before","above","below",
         "up","down","into","again","further","then","once","here","there","when","where","why",
         "how","all","any","both","each","few","more","most","other","some","such","no","nor","not",
@@ -16,59 +14,44 @@ class GenreClassifier:
         "is","am","are","was","were","be","been","being","have","has","had","having","do","does",
         "did","doing","this","that","these","those","he","she","it","they","them","his","her",
         "its","their","what","which","who","whom","because","until","wherever","whenever","ours",
-        "yours","mine"
-    }
+        "yours","mine"}
 
     def __init__(self, alpha=1.0):
         self.alpha = alpha
         self.class_counts = Counter()
         self.word_counts = {}
         self.vocab_size = 0
-        self.games = []  # store all game info
+        self.games = []  # keep full game info
 
-    # --------------------- Helpers ---------------------
+    # --- Helpers -----------------------------------------------------------
     def normalize(self, text):
         text = text.lower()
         text = re.sub(r"[^a-z0-9 ]", " ", text)
-        tokens = [t for t in text.split() if t not in self.STOPWORDS]
-
-        # 🔑 Add bigrams (pairs of consecutive words)
-        bigrams = [tokens[i] + " " + tokens[i+1] for i in range(len(tokens)-1)]
-        return tokens + bigrams
+        return [t for t in text.split() if t not in self.STOPWORDS]
 
     def clean_genre(self, g: str) -> str:
         """Normalize genre labels so 'Action Games' -> 'action'"""
         return g.lower().replace(" games", "").strip()
 
-    def detect_intent(self, query: str) -> str:
-        q = query.lower()
-        if "from" in q or "by" in q:
-            return "publisher"
-        elif "game" in q or "genre" in q:
-            return "genre"
-        elif "called" in q or "named" in q or "title" in q:
-            return "title"
-        elif "about" in q or "story" in q or "description" in q:
-            return "description"
-        return "auto"
-
-    # --------------------- Training ---------------------
+    # --- Training ----------------------------------------------------------
+    # --- Training ----------------------------------------------------------
     def train(self, filepath, test_ratio=0.2):
         csv.field_size_limit(2**31 - 1)
 
         data = []
         with open(filepath, "r", encoding="utf-8") as f:
             reader = csv.DictReader(f)
-            # clean headers
             reader.fieldnames = [h.strip().replace('\ufeff','').replace('"','') for h in reader.fieldnames]
 
             for row in reader:
                 name = row.get("name","").strip()
                 publisher = row.get("publisher","").strip()
-                description = row.get("description","")
+                description = row.get("description","").strip()
                 genres = []
+                url = row.get("url","").strip()
+                image = row.get("image","").strip()
 
-                # Parse genres
+                # Parse genres (can be a list in CSV)
                 try:
                     genres = ast.literal_eval(row.get("genre","[]"))
                     if isinstance(genres, str):
@@ -80,28 +63,28 @@ class GenreClassifier:
                 # Clean genres
                 genres = [self.clean_genre(g) for g in genres if g]
 
-                # Save game info
+                # Save full game info
                 self.games.append({
                     "name": name,
                     "publisher": publisher,
                     "genre": ", ".join(genres) if genres else "",
-                    "description": description
+                    "description": description,
+                    "url": url,
+                    "image": image
                 })
 
-                # 🔑 Features: combine all text
+                # 🔑 Features: combine name + genre + publisher + description
                 genre_text = " ".join(genres)
                 text = f"{name} {genre_text} {publisher} {description}"
 
-                # Add labels (genre / publisher / title)
+                # Add to dataset for training
                 for g in genres:
                     if g:
                         data.append((text, g))
                 if publisher:
                     data.append((text, publisher.lower()))
-                if name:
-                    data.append((text, name.lower()))
 
-        # Shuffle + split
+        # Shuffle + split for optional testing
         random.shuffle(data)
         split = int(len(data) * test_ratio)
         test, train = data[:split], data[split:]
@@ -121,7 +104,8 @@ class GenreClassifier:
         self.vocab_size = len(vocab)
         return test
 
-    # --------------------- Prediction ---------------------
+
+    # --- Prediction --------------------------------------------------------
     def predict(self, text):
         tokens = self.normalize(text)
         total_docs = sum(self.class_counts.values())

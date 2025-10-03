@@ -28,7 +28,7 @@ const GamegleHomepage: React.FC<GamegleHomepageProps> = ({ onNavigateToGames }) 
             // Map backend response to our suggestion objects
             const mapped = data.suggestions.map((token: string, index: number) => ({
               id: String(index),
-              name: `${token}`
+              name: `${searchQuery.trim()} ${token}`
             }));
             setFilteredGames(mapped);
             setShowDropdown(mapped.length > 0); // always show dropdown if there are suggestions

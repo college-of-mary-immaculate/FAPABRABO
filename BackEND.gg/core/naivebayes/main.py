@@ -20,7 +20,7 @@ if __name__ == "__main__":
 
         print(f"\n📌 Predicted category: {predicted_label}")
         print("📊 Probabilities:")
-        for label, p in sorted(probs.items(), key=lambda x: -x[1])[:5]:  # top 5
+        for label, p in sorted(probs.items(), key=lambda x: -x[1])[:20]:  # top 5
             print(f"  {label}: {p:.3f}")
 
         # Show matching games from dataset
@@ -29,7 +29,7 @@ if __name__ == "__main__":
                    or predicted_label in g["publisher"].lower() 
                    or predicted_label in g["name"].lower()]
         if matches:
-            for g in matches[:5]:  # show top 5
+            for g in matches[:20]:  # show top 5
                 print(f" - {g['name']} ({g['publisher']}) | {g['genre']}")
         else:
             print(" No direct matches found, try another query.")
