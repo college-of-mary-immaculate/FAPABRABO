@@ -68,14 +68,18 @@ class GenreClassifier:
                     "genre": ", ".join(genres) if genres else ""
                 })
 
-                # Features for classifier
-                text = f"{publisher} {description}"
+                # 🔑 Features: combine name + genre + publisher + description
+                genre_text = " ".join(genres)
+                text = f"{name} {genre_text} {publisher} {description}"
+
+                # Add to dataset
                 for g in genres:
                     if g:
                         data.append((text, g))
                 if publisher:
                     data.append((text, publisher.lower()))
 
+        # Shuffle + split
         random.shuffle(data)
         split = int(len(data) * test_ratio)
         test, train = data[:split], data[split:]
@@ -119,6 +123,3 @@ class GenreClassifier:
 
         best_label = max(probs, key=probs.get)
         return best_label, probs
-
-
-
