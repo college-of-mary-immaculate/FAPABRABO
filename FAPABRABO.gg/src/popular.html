@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GAMEGLE - Game Collections</title>
+    <link href="popular.css" rel="stylesheet" /></head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo" onclick="navigateToHome()">
+                GAMEGLE
+            </div>
+            <div class="search-bar">
+                <form onsubmit="handleSearchSubmit(event)">
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Search Games"
+                        autocomplete="off"
+                        onfocus="handleInputFocus()"
+                        oninput="handleSearchChange()"
+                    />
+                </form>
+
+                <div class="search-dropdown" id="searchDropdown">
+                </div>
+            </div>
+            <div class="btncontainer">
+                <button onclick="handleSearchSubmit(event)" type="button" class="search-btn">
+                    Search
+                </button>
+                <button type="button" class="game-btn" onclick="navigateToGames()">
+                    Game
+                </button>
+            </div>
+        </header>
+        <div class="popularGames">
+            <h2>Popular Games</h2>
+        </div>
+
+        <div class="collection-grid">
+            <div class="nft-card card-1">
+                <div class="nft-image">👾</div>
+                <div class="nft-info">
+                    <h3 class="nft-title">Cyber Warrior Collection</h3>
+                    <div class="nft-details">
+                        <span class="nft-status">Action Game</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nft-card card-2">
+                <div class="nft-image">🌊</div>
+                <div class="nft-info">
+                    <h3 class="nft-title">Ocean Dreams NFT</h3>
+                    <div class="nft-details">
+                        <span class="nft-status">Adventure</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nft-card card-3">
+                <div class="nft-image">🐺</div>
+                <div class="nft-info">
+                    <h3 class="nft-title">Purple Wolf Spirit</h3>
+                    <div class="nft-details">
+                        <span class="nft-status">RPG Game</span>
+                    </div>
+                </div>
+            </div>
+
+            
+        </div>
+    </div>
+
+    <script>
+        // Sample game data
+        const games = [
+            { id: 1, title: "Cyber Warrior Collection" },
+            { id: 2, title: "Ocean Dreams NFT" },
+            { id: 3, title: "Purple Wolf Spirit" },
+            { id: 4, title: "Shadow Portraits" },
+            { id: 5, title: "Cosmic Panda Club" },
+            { id: 6, title: "Space Explorers" },
+            { id: 7, title: "Racing Thunder" },
+            { id: 8, title: "Puzzle Master" }
+        ];
+
+        const searchInput = document.getElementById('searchInput');
+        const searchDropdown = document.getElementById('searchDropdown');
+
+        function handleSearchChange() {
+            const query = searchInput.value.toLowerCase();
+            
+            if (query.length > 0) {
+                const filtered = games.filter(game => 
+                    game.title.toLowerCase().includes(query)
+                );
+                
+                if (filtered.length > 0) {
+                    searchDropdown.innerHTML = filtered.map(game => `
+                        <div class="search-suggestion" onclick="selectGame('${game.title}')">
+                            <span class="suggestion-text">${game.title}</span>
+                        </div>
+                    `).join('');
+                    searchDropdown.classList.add('show');
+                } else {
+                    searchDropdown.classList.remove('show');
+                }
+            } else {
+                searchDropdown.classList.remove('show');
+            }
+        }
+
+        function handleInputFocus() {
+            if (searchInput.value.length > 0) {
+                handleSearchChange();
+            }
+        }
+
+        function selectGame(title) {
+            searchInput.value = title;
+            searchDropdown.classList.remove('show');
+        }
+
+        function handleSearchSubmit(event) {
+            if (event) event.preventDefault();
+            const query = searchInput.value;
+            if (query) {
+                console.log('Searching for:', query);
+                alert(`Searching for: ${query}`);
+            }
+        }
+
+        function navigateToHome() {
+            window.location.href = '/';
+        }
+
+        function navigateToGames() {
+            window.location.href = '/';
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.search-bar')) {
+                searchDropdown.classList.remove('show');
+            }
+        });
+    </script>
+</body>
+</html>
