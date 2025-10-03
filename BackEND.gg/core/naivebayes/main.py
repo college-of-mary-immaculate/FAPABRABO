@@ -1,4 +1,5 @@
 from model import GenreClassifier
+from model import GenreClassifier
 
 # --- MAIN EXECUTION -------------------------------------------------------
 if __name__ == "__main__":

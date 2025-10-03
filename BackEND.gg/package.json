@@ -1,0 +1,23 @@
+{
+  "name": "fapabrabo-backend",
+  "version": "1.0.0",
+  "description": "Backend API for FAPABRABO",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "test": "jest --watchAll --verbose"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "joi": "^17.7.0",
+    "winston": "^3.8.2"
+  },
+  "devDependencies": {
+    "jest": "^29.3.1",
+    "nodemon": "^2.0.20",
+    "superagent": "^10.2.3",
+    "supertest": "^7.1.4"
+  }
+}
