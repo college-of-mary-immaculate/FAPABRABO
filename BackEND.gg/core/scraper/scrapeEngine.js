@@ -61,12 +61,13 @@ function cleanText(text) {
 }
 
 function saveGames(filePath, games) {
-  const fields = ["name", "genre", "description", "publisher", "url", "image"];
+  const fields = ["name", "genre", "tags", "description", "publisher", "url", "image"];
 
   // clean up text on description so di mag expand 
   const cleanedGames = games.map(g => ({
     name: g.name,
     genre: g.genre,
+    tags: g.tags,
     description: cleanText(g.description),
     publisher: cleanText(g.publisher),
     url: g.url,
