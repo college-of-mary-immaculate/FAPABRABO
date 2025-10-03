@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import './GamegleHomepage.css';
+import '../styles/GamegleHomepage.css';
 
 interface GameSuggestion {
   id: string;

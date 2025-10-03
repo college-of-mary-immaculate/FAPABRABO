@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useState, useRef, useEffect } from "react"
-import "./App.css"
+import "../styles/App.css"
 
 interface SearchResult {
   id: string

@@ -1,7 +1,7 @@
 
 import { useState } from "react"
-import GamegleHomepage from "./GamegleHomepage"
-import GamesPage from "./GamesPage"
+import GamegleHomepage from "./pages/GamegleHomepage"
+import GamesPage from "./pages/searchpage"
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState<'home' | 'games'>('home');
