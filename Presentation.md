@@ -58,16 +58,16 @@ In short, this project shows how **We can improve the gaming experience** by tur
 Check in this link: [View Pipeline Diagram](https://drive.google.com/file/d/1Bg5dQe1ncrtpFGLcAV8aYHp7VQxjf3Np/view?usp=drive_link)
 
 
-### 
+###  II. Mapping and assignment of each module
 
-| Role | Member | Responsibility |
-| --- | --- | --- |
-| Project Lead | @Jet Padilla | Coordination & Architecture |
-| Data Engineer | John Paul Bodino | Web scraping & Preprocessing |
-| Search Engineer | Nathaniel Faborada | TF-IDF & Retrieval |
-| ML Engineer | Diether Pano | Content Classification |
-| Frontend Engineer | Genniesys Bracia | UI & API Development |
----
+| Role             | Member | Responsibility |
+| ---------------- | ------ | -------------- |
+| **Project Lead** | [Jet Padilla](https://github.com/Nahiwagaan) | Coordination & Architecture |
+| **Pre-processing Engineer** | [John Paul Bodino](https://github.com/johnpaul-bodino) | Scraping, Tokenization, n-grams, Stop words  |
+| **Representation Engineerr** | [Nathaniel Faborada](https://github.com/nathanielfaborada) | TF-IDF implementation & vector store  |
+| **Classifier** | [Diether Pano](https://github.com/DietherPano) | Builds and evaluates classification component  |
+| **Frontend / API & Testing** | [Genniesys Bracia](https://github.com/Genniesysbracia) | Search UI / API, Test Functionality  |
+
 
 
 
