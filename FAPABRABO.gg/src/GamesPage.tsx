@@ -15,9 +15,10 @@ interface SearchResult {
 
 interface GamesPageProps {
   onNavigateToHome?: () => void
+  onNavigateToGames?: () => void   // ✅ Added this line
 }
 
-const GamesPage: React.FC<GamesPageProps> = ({ onNavigateToHome }) => {
+const GamesPage: React.FC<GamesPageProps> = ({ onNavigateToHome, onNavigateToGames }) => {
   const [searchQuery, setSearchQuery] = useState("")
   const [showDropdown, setShowDropdown] = useState(false)
   const [filteredResults, setFilteredResults] = useState<SearchResult[]>([])
@@ -185,7 +186,6 @@ const GamesPage: React.FC<GamesPageProps> = ({ onNavigateToHome }) => {
             />
           </form>
 
-
           {showDropdown && filteredResults.length > 0 && (
             <div className="search-dropdown show">
               {filteredResults.map((result) => (
@@ -194,16 +194,15 @@ const GamesPage: React.FC<GamesPageProps> = ({ onNavigateToHome }) => {
                 </div>
               ))}
             </div>
-            
           )}
         </div>
-        <div className="button-container">
+        <div className="btncontainer">
           <button onClick={handleSearchSubmit} type="button" className="search-btn">
             Search
           </button>
           <button
             type="button"
-            className="search-btn"
+            className="game-btn"
             onClick={() => {
               if (onNavigateToGames) {
                 onNavigateToGames()

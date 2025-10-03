@@ -110,6 +110,22 @@ const GamegleHomepage: React.FC<GamegleHomepageProps> = ({ onNavigateToGames }) 
             />
           </div>
         </form>
+        {showDropdown && filteredGames.length > 0 && (
+          <div className="search-dropdown active">
+            {filteredGames.map((game) => (
+              <div key={game.id} className="dropdown-item" onClick={() => handleGameSelect(game)}>
+                <svg className="dropdown-icon" viewBox="0 0 24 24" fill="#9aa0a6">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                </svg>
+                <div className="dropdown-text">
+                  <span className="highlight">{game.name}</span>
+                  <span style={{ color: "#9aa0a6", fontSize: "12px", marginLeft: "8px" }}>{game.category}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
 
         <div className="button-container">
           <button onClick={handleSearchSubmit} type="button" className="search-btn">
@@ -130,22 +146,7 @@ const GamegleHomepage: React.FC<GamegleHomepageProps> = ({ onNavigateToGames }) 
           </button>
         </div>
 
-        {showDropdown && filteredGames.length > 0 && (
-          <div className="search-dropdown active">
-            {filteredGames.map((game) => (
-              <div key={game.id} className="dropdown-item" onClick={() => handleGameSelect(game)}>
-                <svg className="dropdown-icon" viewBox="0 0 24 24" fill="#9aa0a6">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-                </svg>
-                <div className="dropdown-text">
-                  <span className="highlight">{game.name}</span>
-                  <span style={{ color: "#9aa0a6", fontSize: "12px", marginLeft: "8px" }}>{game.category}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+        
     </div>
   )
 }
