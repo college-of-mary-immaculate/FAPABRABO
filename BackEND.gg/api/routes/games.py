@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from typing import List, Optional
-from ..models.schemas import Game, GameCreate
+from .models.schemas import Game, GameCreate
 
 router = APIRouter()
 

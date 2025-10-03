@@ -1,9 +1,8 @@
 # api/routes/ngrams.py
 from fastapi import APIRouter, Query
-from core.ngrams.levenshtein import levenshtein_distance 
+
 from core.ngrams.model import NGrams
 import os
-
 DATASET_PATH = os.getenv("DATASET_PATH", "core/scraper/datasets/all_games.csv")
 
 router = APIRouter()
