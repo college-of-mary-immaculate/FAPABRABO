@@ -60,6 +60,21 @@ def computeTFIDF(tfBow, idfs):
 
 tfidfDocs = [computeTFIDF(tfList[i], idfs) for i in range(len(docs_description))]
 
+
+# --- Retrieval Part---
+def cosine_similarity(vec1, vec2):
+    # dot product
+    dot = sum(vec1[w] * vec2[w] for w in vec1 if w in vec2)
+    
+    # norm of vec1
+    norm1 = math.sqrt(sum(v**2 for v in vec1.values()))
+    
+    # norm of vec2
+    norm2 = math.sqrt(sum(v**2 for v in vec2.values()))
+    
+    return dot / (norm1 * norm2) if norm1 != 0 and norm2 != 0 else 0
+
+
 # Step 7: Put into DataFrame
 df_tfidf = pd.DataFrame(tfidfDocs)
 
