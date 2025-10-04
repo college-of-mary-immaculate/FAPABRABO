@@ -1,19 +1,37 @@
 from model import GenreClassifier
 
+# --- MAIN EXECUTION ---
 if __name__ == "__main__":
-    DATA_FILE = "../scraper/datasets/all_games.csv"   # path to your dataset
+    DATA_FILE = "BackEND.gg/core/scraper/datasets/all_games.csv"
 
     clf = GenreClassifier()
-    test_set = clf.train(DATA_FILE, test_ratio=0.2)
+    clf.train(DATA_FILE)  # train once on your dataset
 
-    # Evaluate on the held-out test set
-    correct = sum(clf.predict(txt)[0] == label for txt, label in test_set)
-    print(f"Validation Accuracy: {correct/len(test_set):.2%}")
+    print("🎮 Game Search Engine (Naive Bayes)")
+    print("Type 'quit' to exit.\n")
 
-    # Try a new description
-    sample = "Fast-paced first-person shooter with online multiplayer and futuristic weapons."
-    pred, probs = clf.predict(sample)
-    print("\nSample prediction:")
-    print("Predicted genre:", pred)
-    for g, p in sorted(probs.items(), key=lambda x: x[1], reverse=True):
-        print(f"  {g:<12} {p*100:5.2f}%")
+    while True:
+        query = input("🔎 Search: ").strip()
+        if query.lower() in ["quit", "exit"]:
+            print("Goodbye 👋")
+            break
+
+        predicted_label, probs = clf.predict(query)
+
+        print(f"\n📌 Predicted category: {predicted_label}")
+        print("📊 Probabilities:")
+        for label, p in sorted(probs.items(), key=lambda x: -x[1])[:20]:  # top 5
+            print(f"  {label}: {p:.3f}")
+
+        # Show matching games from dataset
+        print("\n🎲 Matching games:")
+        matches = [g for g in clf.games if predicted_label in g["genre"].lower() 
+                   or predicted_label in g["publisher"].lower() 
+                   or predicted_label in g["name"].lower()]
+        if matches:
+            for g in matches[:20]:  # show top 5
+                print(f" - {g['name']} ({g['publisher']}) | {g['genre']}")
+        else:
+            print(" No direct matches found, try another query.")
+
+        print("\n" + "-"*40 + "\n")

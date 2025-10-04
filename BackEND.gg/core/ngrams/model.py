@@ -108,4 +108,3 @@ class NGrams:
         suggestions = [w for w in candidates if w not in ("<s>", "<s/>")][:top_k]
 
         return (corrected_context, suggestions) if return_corrected else suggestions
-

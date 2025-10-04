@@ -188,6 +188,24 @@ body {
   object-fit: cover;
 }
 
+.site-genre{
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 8px;
+}
+
+.site-genre:hover{
+  color: #4a9eff;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.publisher-name{
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 8px;
+}
+
 /* Responsive design for mobile */
 @media (max-width: 768px) {
   .main-content {
