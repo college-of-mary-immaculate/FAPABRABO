@@ -1,7 +1,7 @@
 import csv
 import os
 from collections import Counter
-from .levenshtein import levenshtein_distance  
+from core.ngrams.levenshtein import levenshtein_distance  
 
 class NGrams:
     def __init__(self):
