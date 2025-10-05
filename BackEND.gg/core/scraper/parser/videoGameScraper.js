@@ -3,8 +3,27 @@ export const SteamScraper = {
   pattern: /steampowered\.com/,
   scrape: ($, url) => {
     const name = $("#appHubAppName").text().trim() || $("h1").first().text().trim() || $('meta[property="og:title"]').attr("content") || null;
-    const description = $("meta[property='og:description']").attr("content") || $("p").first().text().trim() || null;
+    let description = "";
 
+    // Remove inline media elements to keep text clean
+    $("#game_area_description .bb_img_ctn, #game_area_description video, #game_area_description img").remove();
+
+    // Collect all paragraph text
+    const paragraphs = [];
+    $("#game_area_description .bb_paragraph").each((i, el) => {
+      const text = $(el).text().replace(/\s+/g, " ").trim();
+      if (text) paragraphs.push(text);
+    });
+
+    if (paragraphs.length > 0) {
+      description = paragraphs.join("\n\n");
+    } else {
+      // fallback if Steam layout changes
+      description =
+        $("meta[property='og:description']").attr("content") ||
+        $("p").first().text().trim() ||
+        null;
+    }
     const genre = [];
     $("a[href*='/genre/']").each((i, el) => {
       genre.push($(el).text().trim());
@@ -30,8 +49,16 @@ export const RAWGScraper = {
   scrape: ($, url) => {
     const name = $("h1[itemprop='name'].heading_1.game__title").text().trim() || null;
 
-    const description = $("div[itemprop='description'].game__about-text span") .text().trim() ||  $("meta[property='og:description']").attr("content") || $("p").first().text().trim()
-  null;
+    let description =
+      $("div[itemprop='description'].game__about-text").text().trim() ||
+      $("meta[property='og:description']").attr("content") ||
+      $("p").first().text().trim() ||
+      null;
+
+  
+    if (description) {
+      description = description.replace(/\s+/g, " ").trim();
+    }
     
     const genre = [];
       $("div.game__meta-block")
