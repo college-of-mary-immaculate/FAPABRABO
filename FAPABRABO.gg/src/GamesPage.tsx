@@ -122,11 +122,23 @@ const GamesPage: React.FC<GamesPageProps> = ({ onNavigateToHome }) => {
 
           {showDropdown && suggestions.length > 0 && (
             <div className="search-dropdown show">
-              {suggestions.map((result, idx) => (
-                <div key={idx} className="search-suggestion" onClick={() => handleResultSelect(result)}>
-                  <span className="suggestion-text">{result}</span>
-                </div>
-              ))}
+              {suggestions.map((result, idx) => {
+                // Append the searchQuery to next token (if not already full)
+                const shouldAppend = !result.toLowerCase().startsWith(searchQuery.toLowerCase())
+                const fullText = shouldAppend
+                  ? `${searchQuery.trim()} ${result}`.trim()
+                  : result
+
+                return (
+                  <div
+                    key={idx}
+                    className="search-suggestion"
+                    onClick={() => handleResultSelect(fullText)}
+                  >
+                    <span className="suggestion-text">{fullText}</span>
+                  </div>
+                )
+              })}
             </div>
           )}
         </div>
