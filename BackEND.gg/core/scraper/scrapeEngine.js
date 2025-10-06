@@ -11,6 +11,9 @@ const LINKS_FILE = "./links.txt";
 const ERROR_LOG = "./errors.log";
 
 
+
+
+
 function loadLinks(filePath) {
   if (!fs.existsSync(filePath)) {
     console.error(`❌ Links file not found: ${filePath}`);
@@ -67,7 +70,7 @@ function saveGames(filePath, games) {
 }
 
 function logError(url, err) {
-  const message = `${new Date().toISOString()} | ${url} | ${err.message}\n`;
+  const message = `${url}}\n`;
   fs.appendFileSync(ERROR_LOG, message);
 }
 
@@ -110,7 +113,7 @@ async function scrapeAllGames(urls) {
       console.log(`⚠️ No scraper found for URL: ${url}`);
       continue;
     }
-
+   
     try {
       console.log(`🕹️ Scraping: ${url}`);
       const html = await fetchHTML(browser, url);
@@ -124,7 +127,7 @@ async function scrapeAllGames(urls) {
       }
 
       // Avoid duplicates
-      if (!allGames.some(g => g.url === game.url)) {
+      if (!allGames.some(g => g.url === game.url || g.name === game.name)) {
         allGames.push(game);
         console.log(`✅ Added: ${game.name}`);
       } else {
@@ -132,7 +135,7 @@ async function scrapeAllGames(urls) {
       }
     } catch (err) {
       console.log(`❌ Error scraping ${url}: ${err.message}`);
-      logError(url, err);
+      logError(url);
     }
 
    
