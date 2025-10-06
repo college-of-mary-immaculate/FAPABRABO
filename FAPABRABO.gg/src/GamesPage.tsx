@@ -26,6 +26,7 @@ const GamesPage: React.FC<GamesPageProps> = ({ onNavigateToHome }) => {
   const [searchResults, setSearchResults] = useState<SearchResult[]>([])
   const searchRef = useRef<HTMLDivElement>(null)
 
+
   // 🔎 Fetch suggestions from backend
   useEffect(() => {
     const fetchSuggestions = async () => {
@@ -71,12 +72,24 @@ const GamesPage: React.FC<GamesPageProps> = ({ onNavigateToHome }) => {
       const res = await fetch(`http://127.0.0.1:8000/search?q=${query}`)
       if (res.ok) {
         const data = await res.json()
+        console.log("Backend raw response:", data)
         setSearchResults(data.results || [])
       }
     } catch (err) {
       console.error("Error fetching search results:", err)
     }
   }
+
+  // 🧭 Auto-load results if URL has ?q= parameter
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const query = params.get("q");
+    console.log("Detected query:", query); 
+    if (query) {
+      setSearchQuery(query);
+      fetchSearchResults(query);
+    }
+  }, []);
 
   const handleResultSelect = (text: string) => {
     setSearchQuery(text)
