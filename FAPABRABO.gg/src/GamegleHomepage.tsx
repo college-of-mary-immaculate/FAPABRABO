@@ -44,6 +44,18 @@ const GamegleHomepage: React.FC<GamegleHomepageProps> = ({ onNavigateToGames }) 
       }
     };
 
+  //   const fetchSearchResults = async (query: string) => {
+  //   try {
+  //     const res = await fetch(`http://127.0.0.1:8000/search?q=${query}`)
+  //     if (res.ok) {
+  //       const data = await res.json()
+  //       setSearchResults(data.results || [])
+  //     }
+  //   } catch (err) {
+  //     console.error("Error fetching search results:", err)
+  //   }
+  // }
+
     fetchSuggestions();
   }, [searchQuery]);
 
@@ -67,7 +79,8 @@ const GamegleHomepage: React.FC<GamegleHomepageProps> = ({ onNavigateToGames }) 
     setSearchQuery(game.name);
     setShowDropdown(false);
     if (onNavigateToGames) onNavigateToGames();
-    else window.location.href = '/';
+    else window.location.href = `/games?q=${encodeURIComponent(game.name)}`;
+    console.log("Redirecting to:", `/games?q=${encodeURIComponent(game.name)}`);
   };
 
   const handleSearchSubmit = (e: React.FormEvent) => {
