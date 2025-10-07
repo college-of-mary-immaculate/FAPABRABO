@@ -6,7 +6,8 @@ import ast
 from collections import Counter
 
 class GenreClassifier:
-    STOPWORDS = {"a","an","the","and","or","but","if","while","for","to","of","at","by","from",
+    STOPWORDS = {
+        "a","an","the","and","or","but","if","while","for","to","of","at","by","from",
         "on","off","in","out","over","under","with","as","about","after","before","above","below",
         "up","down","into","again","further","then","once","here","there","when","where","why",
         "how","all","any","both","each","few","more","most","other","some","such","no","nor","not",
@@ -14,14 +15,17 @@ class GenreClassifier:
         "is","am","are","was","were","be","been","being","have","has","had","having","do","does",
         "did","doing","this","that","these","those","he","she","it","they","them","his","her",
         "its","their","what","which","who","whom","because","until","wherever","whenever","ours",
-        "yours","mine"}
+        "yours","mine"
+    }
 
-    def __init__(self, alpha=1.0):
+    def __init__(self, alpha=1.0, confidence_threshold=0.25, desc_weight=1.5):
         self.alpha = alpha
+        self.confidence_threshold = confidence_threshold
+        self.desc_weight = desc_weight  # controls how much the description matters
         self.class_counts = Counter()
         self.word_counts = {}
         self.vocab_size = 0
-        self.games = []  # keep full game info
+        self.games = []
 
     # --- Helpers -----------------------------------------------------------
     def normalize(self, text):
@@ -34,14 +38,15 @@ class GenreClassifier:
         return g.lower().replace(" games", "").strip()
 
     # --- Training ----------------------------------------------------------
-    # --- Training ----------------------------------------------------------
     def train(self, filepath, test_ratio=0.2):
         csv.field_size_limit(2**31 - 1)
-
         data = []
+
         with open(filepath, "r", encoding="utf-8") as f:
             reader = csv.DictReader(f)
-            reader.fieldnames = [h.strip().replace('\ufeff','').replace('"','') for h in reader.fieldnames]
+            reader.fieldnames = [
+                h.strip().replace('\ufeff','').replace('"','') for h in reader.fieldnames
+            ]
 
             for row in reader:
                 name = row.get("name","").strip()
@@ -51,7 +56,6 @@ class GenreClassifier:
                 url = row.get("url","").strip()
                 image = row.get("image","").strip()
 
-                # Parse genres (can be a list in CSV)
                 try:
                     genres = ast.literal_eval(row.get("genre","[]"))
                     if isinstance(genres, str):
@@ -60,10 +64,8 @@ class GenreClassifier:
                     g = row.get("genre","").strip()
                     if g: genres = [g]
 
-                # Clean genres
                 genres = [self.clean_genre(g) for g in genres if g]
 
-                # Save full game info
                 self.games.append({
                     "name": name,
                     "publisher": publisher,
@@ -73,18 +75,16 @@ class GenreClassifier:
                     "image": image
                 })
 
-                # 🔑 Features: combine name + genre + publisher + description
+                # Combine text with weighted description
                 genre_text = " ".join(genres)
-                text = f"{name} {genre_text} {publisher} {description}"
+                combined_text = f"{name} {genre_text} {publisher} " + (description * int(self.desc_weight))
 
-                # Add to dataset for training
                 for g in genres:
                     if g:
-                        data.append((text, g))
+                        data.append((combined_text, g))
                 if publisher:
-                    data.append((text, publisher.lower()))
+                    data.append((combined_text, publisher.lower()))
 
-        # Shuffle + split for optional testing
         random.shuffle(data)
         split = int(len(data) * test_ratio)
         test, train = data[:split], data[split:]
@@ -104,10 +104,22 @@ class GenreClassifier:
         self.vocab_size = len(vocab)
         return test
 
-
     # --- Prediction --------------------------------------------------------
     def predict(self, text):
         tokens = self.normalize(text)
+
+        # 🧩 1️⃣ No tokens? Immediately stop
+        if not tokens:
+            return None, {}
+
+        # 🧩 2️⃣ Check if any token exists in known vocabulary
+        vocab_tokens = set()
+        for counts in self.word_counts.values():
+            vocab_tokens.update(counts.keys())
+        valid_tokens = [t for t in tokens if t in vocab_tokens]
+        if len(valid_tokens) == 0:
+            return None, {}
+
         total_docs = sum(self.class_counts.values())
         log_probs = {}
 
@@ -115,17 +127,24 @@ class GenreClassifier:
             total_words = sum(self.word_counts[label].values())
             log_prob = math.log(doc_count / total_docs)
 
-            for token in tokens:
+            for token in valid_tokens:
                 count = self.word_counts[label].get(token, 0)
                 prob = (count + self.alpha) / (total_words + self.alpha * self.vocab_size)
                 log_prob += math.log(prob)
 
             log_probs[label] = log_prob
 
+        # Convert to probabilities
         max_log = max(log_probs.values())
         exp_scores = {g: math.exp(v - max_log) for g, v in log_probs.items()}
         total = sum(exp_scores.values())
-        probs = {g: exp_scores[g]/total for g in exp_scores}
+        probs = {g: exp_scores[g] / total for g in exp_scores}
 
         best_label = max(probs, key=probs.get)
+        confidence = probs[best_label]
+
+        # 🧩 3️⃣ If confidence is too low → No prediction
+        if confidence < self.confidence_threshold:
+            return None, {}
+
         return best_label, probs

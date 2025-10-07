@@ -24,6 +24,8 @@ const GamesPage: React.FC<GamesPageProps> = ({ onNavigateToHome }) => {
   const [showDropdown, setShowDropdown] = useState(false)
   const [suggestions, setSuggestions] = useState<string[]>([])
   const [searchResults, setSearchResults] = useState<SearchResult[]>([])
+  const [hasSearched, setHasSearched] = useState(false)
+  const [loading, setLoading] = useState(false)
   const searchRef = useRef<HTMLDivElement>(null)
 
   // 🔎 Fetch suggestions from backend
@@ -68,20 +70,38 @@ const GamesPage: React.FC<GamesPageProps> = ({ onNavigateToHome }) => {
   // 🔥 Run full search on backend
   const fetchSearchResults = async (query: string) => {
     try {
+      setHasSearched(true)
+      setLoading(true)
       const res = await fetch(`http://127.0.0.1:8000/search?q=${query}`)
       if (res.ok) {
         const data = await res.json()
+        console.log("Backend raw response:", data)
         setSearchResults(data.results || [])
+      } else {
+        setSearchResults([])
       }
     } catch (err) {
       console.error("Error fetching search results:", err)
+      setSearchResults([])
+    } finally {
+      setLoading(false)
     }
   }
+
+  // 🧭 Auto-load results if URL has ?q= parameter
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const query = params.get("q")
+    if (query) {
+      setSearchQuery(query)
+      fetchSearchResults(query)
+    }
+  }, [])
 
   const handleResultSelect = (text: string) => {
     setSearchQuery(text)
     setShowDropdown(false)
-    fetchSearchResults(text) // run backend search
+    fetchSearchResults(text)
   }
 
   const handleSearchSubmit = (e: React.FormEvent) => {
@@ -105,9 +125,14 @@ const GamesPage: React.FC<GamesPageProps> = ({ onNavigateToHome }) => {
   return (
     <div className="container">
       <header className="header">
-        <div className="logo" onClick={navigateToHome} style={{ cursor: "pointer" }}>
+        <div
+          className="logo"
+          onClick={navigateToHome}
+          style={{ cursor: "pointer" }}
+        >
           GAMEGLE
         </div>
+
         <div className="search-bar" ref={searchRef}>
           <form onSubmit={handleSearchSubmit}>
             <input
@@ -122,11 +147,22 @@ const GamesPage: React.FC<GamesPageProps> = ({ onNavigateToHome }) => {
 
           {showDropdown && suggestions.length > 0 && (
             <div className="search-dropdown show">
-              {suggestions.map((result, idx) => (
-                <div key={idx} className="search-suggestion" onClick={() => handleResultSelect(result)}>
-                  <span className="suggestion-text">{result}</span>
-                </div>
-              ))}
+              {suggestions.map((result, idx) => {
+                const shouldAppend = !result.toLowerCase().startsWith(searchQuery.toLowerCase())
+                const fullText = shouldAppend
+                  ? `${searchQuery.trim()} ${result}`.trim()
+                  : result
+
+                return (
+                  <div
+                    key={idx}
+                    className="search-suggestion"
+                    onClick={() => handleResultSelect(fullText)}
+                  >
+                    <span className="suggestion-text">{fullText}</span>
+                  </div>
+                )
+              })}
             </div>
           )}
         </div>
@@ -134,26 +170,45 @@ const GamesPage: React.FC<GamesPageProps> = ({ onNavigateToHome }) => {
 
       <main className="main-content">
         <div className="search-results">
-          {searchResults.map((result) => (
-            <div key={result.id} className="search-result-item">
-              <div className="result-content">
-                <div className="result-header">
-                  <div className="site-info">
-                    <div className="site-details">
-                      <a className="site-name" href={result.siteUrl} target="_blank" rel="noopener noreferrer">{result.siteName}</a>
+          {loading ? (
+            <p className="loading-text">Loading results...</p>
+          ) : hasSearched && searchResults.length === 0 ? (
+            <div className="no-results">
+              <h2>Page Not Found</h2>
+              <p>No games matched your search.</p>
+            </div>
+          ) : (
+            searchResults.map((result) => (
+              <div key={result.id} className="search-result-item">
+                <div className="result-content">
+                  <div className="result-header">
+                    <div className="site-info">
+                      <div className="site-details">
+                        <a
+                          className="site-name"
+                          href={result.siteUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {result.siteName}
+                        </a>
+                      </div>
                     </div>
                   </div>
+                  <h3 className="result-title">{result.name}</h3>
+                  <span className="site-genre">{result.genre}</span>
+                  <p className="publisher-name">Publisher: {result.publisher}</p>
+                  <p className="result-description">{result.description}</p>
                 </div>
-                <h3 className="result-title">{result.name}</h3>
-                <span className="site-genre">{result.genre}</span>
-                <p className="publisher-name">Publisher: {result.publisher}</p>
-                <p className="result-description">{result.description}</p>
+                <div className="result-thumbnail">
+                  <img
+                    src={result.thumbnail || "/placeholder.svg"}
+                    alt={result.name}
+                  />
+                </div>
               </div>
-              <div className="result-thumbnail">
-                <img src={result.thumbnail || "/placeholder.svg"} alt={result.name} />
-              </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </main>
     </div>
