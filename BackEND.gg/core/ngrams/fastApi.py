@@ -1,14 +1,9 @@
 from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
-import sys
-from pathlib import Path
-
-# ----------------- Fix module imports -----------------
-core_path = Path(__file__).parent.parent  # points to "core" folder
-sys.path.insert(0, str(core_path))
 
 from model import NGrams
 from naivebayes.model import GenreClassifier
+import os
 
 # ----------------- FastAPI app -----------------
 app = FastAPI()
@@ -22,7 +17,7 @@ app.add_middleware(
 )
 
 # ----------------- Load models once -----------------
-dataset_path = "../scraper/datasets/all_games.csv"
+dataset_path = os.getenv("DATASET_PATH", "core/scraper/datasets/all_games.csv")
 
 ngrams = NGrams()
 ngrams.process_names(dataset_path)
