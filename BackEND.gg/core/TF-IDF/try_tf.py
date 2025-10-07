@@ -2,12 +2,22 @@ import pandas as pd
 import math
 import re
 from collections import Counter
-from core.utils.preprocess import tokenize
+from core.utils.preprocess import tokenize  # keep your custom tokenizer if needed
 
 # ===== Load dataset =====
 data = pd.read_csv("../scraper/datasets/all_games.csv")
-# Use descriptions as documents
-docs_description = data["description"].fillna("").tolist()
+
+# ===== Combine ideal columns =====
+# Combine the fields: genre, tags, publisher, and description
+data["combined_text"] = (
+    data["genre"].fillna("").astype(str) + " " +
+    data["tags"].fillna("").astype(str) + " " +
+    data["publisher"].fillna("").astype(str) + " " +
+    data["description"].fillna("").astype(str)
+)
+
+# ===== Use combined text as documents =====
+docs_combined = data["combined_text"].fillna("").tolist()
 
 # ===== Contractions dictionary =====
 contractions = {
@@ -39,7 +49,7 @@ contractions = {
     "'tis": "it is", "'twas": "it was"
 }
 
-
+# ===== Stopwords =====
 stop_words = {
     "a","an","the","and","or","but","if","while","with","for","on","in",
     "to","from","of","at","by","is","am","are","was","were","be","been",
@@ -47,29 +57,26 @@ stop_words = {
     "those","it","its","as","so","than","too","very","can","will","just"
 }
 
-# ===== Preprocessing: expand contractions, tokenize, remove stopwords =====
+# ===== Preprocessing functions =====
 def expand_contractions(text, contractions_map):
     pattern = re.compile(r'\b(' + '|'.join(re.escape(k) for k in contractions_map.keys()) + r')\b')
     return pattern.sub(lambda x: contractions_map[x.group()], text.lower())
 
-def tokenize(text):
-    # Expand contractions
+def simple_tokenize(text):
     expanded = expand_contractions(text, contractions)
-    # Keep only words
     tokens = re.findall(r"\b[a-zA-Z]+\b", expanded)
-    # Remove stopwords
     return [word for word in tokens if word not in stop_words]
 
 # ===== Tokenize all documents =====
-bow_list = [tokenize(doc) for doc in docs_description]
+bow_list = [simple_tokenize(doc) for doc in docs_combined]
 
-# ===== Build vocabulary =====
+# ===== Vocabulary =====
 wordSet = set(word for bow in bow_list for word in bow)
 
-# ===== Create word count dictionaries =====
+# ===== Word counts per document =====
 wordDicts = [Counter(bow) for bow in bow_list]
 
-# ===== Functions: TF, IDF, TF-IDF =====
+# ===== TF, IDF, TF-IDF =====
 def computeTF(wordDict, bow):
     bowCount = len(bow)
     return {w: (count / float(bowCount)) if bowCount > 0 else 0 for w, count in wordDict.items()}
@@ -85,8 +92,7 @@ def computeIDF(docWordDicts):
 def computeTFIDF(tfBow, idfs):
     return {w: tfv * idfs.get(w, 0) for w, tfv in tfBow.items()}
 
-# ===== Compute TF, IDF, TF-IDF =====
-print("📊 Computing TF-IDF... please wait.")
+print("📊 Computing TF-IDF (genre, tags, publisher, description)... please wait.")
 tfList = [computeTF(wordDicts[i], bow_list[i]) for i in range(len(bow_list))]
 idfs = computeIDF(wordDicts)
 tfidfDocs = [computeTFIDF(tfList[i], idfs) for i in range(len(bow_list))]
@@ -99,9 +105,9 @@ def cosine_similarity(doc_vec, query_vec):
     norm_query = math.sqrt(sum(v * v for v in query_vec.values()))
     return dot / (norm_doc * norm_query) if norm_doc and norm_query else 0.0
 
-# ===== Search function =====
+# ===== Search Function =====
 def search(query, top_n=5, save_csv=False):
-    q_tokens = tokenize(query)
+    q_tokens = simple_tokenize(query)
     q_wd = Counter(q_tokens)
     q_tf = computeTF(q_wd, q_tokens)
     q_tfidf = computeTFIDF(q_tf, idfs)
@@ -113,18 +119,17 @@ def search(query, top_n=5, save_csv=False):
         {
             "rank": idx + 1,
             "name": data.loc[i, "name"],
-            "url": data.loc[i, "url"],
-            "publisher": data.loc[i, "publisher"],
             "genre": data.loc[i, "genre"],
+            "tags": data.loc[i, "tags"],
+            "publisher": data.loc[i, "publisher"],
+            "url": data.loc[i, "url"],
             "similarity": sim,
         }
         for idx, (i, sim) in enumerate(scores[:top_n])
     ]
 
-    # Save to CSV if requested
     if save_csv:
-        df_results = pd.DataFrame(results)
-        df_results.to_csv("search_results.csv", index=False)
+        pd.DataFrame(results).to_csv("search_results.csv", index=False)
         print("💾 Results saved to search_results.csv")
 
     return results
@@ -138,5 +143,5 @@ if __name__ == "__main__":
         results = search(query_text, top_n=5, save_csv=True)
         print("\n📌 Top results:")
         for res in results:
-            print(f"{res['rank']}. {res['name']} | Genre: {res['genre']}  | Url: {res['url']} | Score: {res['similarity']:.4f}")
+            print(f"{res['rank']}. {res['name']} | Genre: {res['genre']} | Tags: {res['tags']} | Publisher: {res['publisher']} | Score: {res['similarity']:.4f}")
         print("------")
