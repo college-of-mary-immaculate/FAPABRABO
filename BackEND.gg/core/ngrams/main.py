@@ -4,7 +4,7 @@ from model import NGrams
 if __name__ == "__main__":
     model = NGrams()
     try:
-        model.process()
+        model.process_names()
 
         print("Type a partial query (press Enter on empty line to quit):")
         while True:

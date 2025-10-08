@@ -30,8 +30,29 @@ def normalize(text):
         "i've": "i have", "you've": "you have", "we've": "we have",
         "they've": "they have", "don't": "do not", "can't": "cannot",
         "won't": "will not", "n't": " not", "'re": " are", "'s": " is",
-        "'d": " would", "'ll": " will", "'ve": " have", "'m": " am"
+        "'d": " would", "'ll": " will", "'ve": " have", "'m": " am",
+        "ain't": "is not", "isn't": "is not", "aren't": "are not",
+        "wasn't": "was not", "weren't": "were not", "haven't": "have not",
+        "hasn't": "has not", "hadn't": "had not", "wouldn't": "would not",
+        "shouldn't": "should not", "couldn't": "could not", "mustn't": "must not",
+        "needn't": "need not", "daren't": "dare not", "shan't": "shall not",
+        "he'd": "he would", "she'd": "she would", "it'd": "it would",
+        "we'd": "we would", "they'd": "they would", "i'd": "i would",
+        "who'd": "who would", "there'd": "there would",
+        "he'll": "he will", "she'll": "she will", "it'll": "it will",
+        "we'll": "we will", "they'll": "they will", "i'll": "i will",
+        "who'll": "who will", "that'll": "that will",
+        "who's": "who is", "what's": "what is", "where's": "where is",
+        "when's": "when is", "why's": "why is", "how's": "how is",
+        "who've": "who have", "would've": "would have", "should've": "should have",
+        "could've": "could have", "must've": "must have", "might've": "might have",
+        "let's": "let us", "y'all": "you all", "o'clock": "of the clock",
+        "ma'am": "madam", "gonna": "going to", "wanna": "want to",
+        "gotta": "got to", "innit": "is it not", "lemme": "let me",
+        "gimme": "give me", "c'mon": "come on", "y'know": "you know",
+        "'tis": "it is", "'twas": "it was"
     }
+
     for c, e in contractions.items():
         text = re.sub(rf"\b{re.escape(c)}\b", e, text)
 
