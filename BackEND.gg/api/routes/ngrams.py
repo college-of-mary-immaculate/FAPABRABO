@@ -3,7 +3,7 @@ from fastapi import APIRouter, Query
 
 from core.ngrams.model import NGrams
 import os
-DATASET_PATH = os.getenv("DATASET_PATH", "core/scraper/datasets/all_games.csv")
+DATASET_PATH = os.getenv("DATASET_PATH", "core/scraper/datasets/old_all_games.csv")
 
 router = APIRouter()
 
