@@ -9,7 +9,7 @@ datasets = os.getenv("DATASET_PATH", "core/scraper/datasets/all_games.csv")
 data = pd.read_csv(datasets)
 
 # ===== Combine ideal columns =====
-# Combine: genre + tags + publisher + description
+# Combine: genre + tags + publisher + description 
 data["combined_text"] = (
     data["genre"].fillna("").astype(str) + " " +
     data["tags"].fillna("").astype(str) + " " +
@@ -60,46 +60,46 @@ def cosine_similarity(doc_vec, query_vec):
 
 
 # ===== Search Function =====
-def search(query, top_n=5, save_csv=False):
-    q_tokens = tokenize(query)
-    q_wd = Counter(q_tokens)
-    q_tf = computeTF(q_wd, q_tokens)
-    q_tfidf = computeTFIDF(q_tf, idfs)
+# def search(query, top_n=5, save_csv=False):
+#     q_tokens = tokenize(query)
+#     q_wd = Counter(q_tokens)
+#     q_tf = computeTF(q_wd, q_tokens)s
+#     q_tfidf = computeTFIDF(q_tf, idfs)
 
-    scores = [(i, cosine_similarity(doc_vec, q_tfidf)) for i, doc_vec in enumerate(tfidfDocs)]
-    scores = sorted(scores, key=lambda x: x[1], reverse=True)
+#     scores = [(i, cosine_similarity(doc_vec, q_tfidf)) for i, doc_vec in enumerate(tfidfDocs)]
+#     scores = sorted(scores, key=lambda x: x[1], reverse=True)
 
-    results = [
-        {
-            "rank": idx + 1,
-            "name": data.loc[i, "name"],
-            "genre": data.loc[i, "genre"],
-            "tags": data.loc[i, "tags"],
-            "publisher": data.loc[i, "publisher"],
-            "description": data.loc[i, "description"],
-            "url": data.loc[i, "url"],
-            "similarity": sim,
-        }
-        for idx, (i, sim) in enumerate(scores[:top_n])
-    ]
+#     results = [
+#         {
+#             "rank": idx + 1,
+#             "name": data.loc[i, "name"],
+#             "genre": data.loc[i, "genre"],
+#             "tags": data.loc[i, "tags"],
+#             "publisher": data.loc[i, "publisher"],
+#             "description": data.loc[i, "description"],
+#             "url": data.loc[i, "url"],
+#             "similarity": sim,
+#         }
+#         for idx, (i, sim) in enumerate(scores[:top_n])
+#     ]
 
-    if save_csv:
-        pd.DataFrame(results).to_csv("search_results.csv", index=False)
-        print("💾 Results saved to search_results.csv")
+#     if save_csv:
+#         pd.DataFrame(results).to_csv("search_results.csv", index=False)
+#         print("💾 Results saved to search_results.csv")
 
-    return results
+#     return results
 
-# ===== Example usage =====
-if __name__ == "__main__":
-    while True:
-        query_text = input("\n🔎 Enter search query (or 'exit' to quit): ")
-        if query_text.lower() == "exit":
-            break
-        results = search(query_text, top_n=5, save_csv=True)
-        print("\n📌 Top results:")
-        for res in results:
-            print(f"{res['rank']}. {res['name']} | Genre: {res['genre']} | Tags: {res['tags']} | Publisher: {res['publisher']} | Description: {res['description']} | Score: {res['similarity']:.4f}")
-        print("------")
+# # ===== Example usage =====
+# if __name__ == "__main__":
+#     while True:
+#         query_text = input("\n🔎 Enter search query (or 'exit' to quit): ")
+#         if query_text.lower() == "exit":
+#             break
+#         results = search(query_text, top_n=5, save_csv=True)
+#         print("\n📌 Top results:")
+#         for res in results:
+#             print(f"{res['rank']}. {res['name']} | Genre: {res['genre']} | Tags: {res['tags']} | Publisher: {res['publisher']} | Description: {res['description']} | Score: {res['similarity']:.4f}")
+#         print("------")
 
 
 # https://www.freecodecamp.org/news/how-to-process-textual-data-using-tf-idf-in-python-cd2bbc0a94a3

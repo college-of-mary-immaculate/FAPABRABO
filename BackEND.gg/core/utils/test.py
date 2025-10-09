@@ -1,5 +1,5 @@
 from api.config.config_database import db
-from .TF_IDF import tfidfDocs, data
+from .representation_tf import tfidfDocs, data
 
 
 def test_connection():
@@ -7,6 +7,8 @@ def test_connection():
     collection.delete_many({})  # optional: clear previous data
 
     for i, vec in enumerate(tfidfDocs):
+        image_field = str(data.loc[i, "image"]).strip('"')  # remove extra quotes
+
         doc = {
             "name": data.loc[i, "name"],
             "genre": data.loc[i, "genre"],
@@ -14,8 +16,10 @@ def test_connection():
             "publisher": data.loc[i, "publisher"],
             "description": data.loc[i, "description"],
             "url": data.loc[i, "url"],
-            "tfidf_vector": vec
+            "image": image_field,  # now it's clean
+            "tfidf_vector": vec.tolist() if hasattr(vec, "tolist") else vec
         }
+
         collection.insert_one(doc)
 
 print("💾 All TF-IDF vectors inserted into MongoDB collection 'game_vectors'.")
