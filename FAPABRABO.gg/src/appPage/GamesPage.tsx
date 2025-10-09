@@ -197,6 +197,7 @@ const GamesPage: React.FC<GamesPageProps> = ({ onNavigateToHome }) => {
                   </div>
                   <h3 className="result-title">{result.name}</h3>
                   <span className="site-genre">{result.genre}</span>
+                  <p className="site-tags">Tags: {result.tags}</p>
                   <p className="publisher-name">Publisher: {result.publisher}</p>
                   <p className="result-description">{result.description}</p>
                 </div>

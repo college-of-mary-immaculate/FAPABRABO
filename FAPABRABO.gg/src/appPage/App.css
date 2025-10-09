@@ -194,6 +194,12 @@ body {
   margin-bottom: 8px;
 }
 
+.site-tags{
+  font-size: 10px;
+  color: #888;
+  margin-bottom: 8px;
+}
+
 .site-genre:hover{
   color: #4a9eff;
   text-decoration: underline;
