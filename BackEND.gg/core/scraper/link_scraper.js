@@ -4,11 +4,30 @@ import fs from "fs";
 import { randomUserAgent } from "./utils/randomUserAgent.js";
 
 const BASE_URL = "https://rawg.io";
-const TARGET_URL = "https://rawg.io/search?query=old"; // starting point
+const TARGET_URL = "https://rawg.io/search?query=planthttps://rawg.io/search?query=animals"; // starting point
 const LINKS_FILE = "./links.txt";
 
 function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+
+async function autoScroll(page) {
+  await page.evaluate(async () => {
+    await new Promise((resolve) => {
+      let totalHeight = 0;
+      const distance = 400;
+      const timer = setInterval(() => {
+        const scrollHeight = document.body.scrollHeight;
+        window.scrollBy(0, distance);
+        totalHeight += distance;
+        if (totalHeight >= scrollHeight - window.innerHeight) {
+          clearInterval(timer);
+          resolve();
+        }
+      }, 300);
+    });
+  });
 }
 
 function saveLinks(links) {
@@ -23,7 +42,7 @@ async function fetchHTML(browser, url) {
   await page.setUserAgent(USER_AGENT);
   console.log(`🌐 Visiting: ${url}`);
   await page.goto(url, { waitUntil: "networkidle2", timeout: 60000 });
-
+  await autoScroll(page);
   await delay(1500);
   const html = await page.content();
   await page.close();
