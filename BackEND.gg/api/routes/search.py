@@ -1,4 +1,5 @@
 import os
+import re
 from fastapi import APIRouter, Query
 from core.naivebayes.model import GenreClassifier
 
@@ -12,12 +13,12 @@ clf.train(DATASET_PATH)
 
 # ----------------- Helper -----------------
 def safe_game_dict(g):
-    """Return all CSV fields safely for frontend."""
     return {
         "id": str(hash(g.get("name", ""))),
         "name": g.get("name", ""),
         "publisher": g.get("publisher", ""),
         "genre": g.get("genre", ""),
+        "tags": g.get("tags", ""),
         "description": g.get("description", "No description available"),
         "thumbnail": g.get("image", "/placeholder.svg"),
         "siteUrl": g.get("url", "/"),
@@ -28,12 +29,41 @@ def safe_game_dict(g):
 @router.get("/search")
 def search(q: str = Query(..., min_length=1)):
     query = q.lower().strip()
+    normalized_query = re.sub(r"[^a-z0-9 ]", " ", query).replace(",", " ")
+    normalized_query = re.sub(r"\s+", " ", normalized_query)
 
-    # 1️⃣ Exact/partial name match
+    def normalize_text(text: str):
+        clean = re.sub(r"[^a-z0-9 ]", " ", text.lower())
+        clean = re.sub(r"\s+", " ", clean)
+        return clean.strip()
+
+    def match(text):
+        return normalized_query in normalize_text(text)
+
+    # Check TAGS first (since "survival horror", "open world" etc. are tag-like)
+    tag_matches = [safe_game_dict(g) for g in clf.games if match(g.get("tags", ""))]
+    if tag_matches:
+        return {
+            "intent": "tags",
+            "results": tag_matches[:15],
+            "probs": {g["tags"]: 1.0 for g in tag_matches[:15]},
+        }
+
+    # Check GENRES (some CSVs store genre info instead of tags)
+    genre_matches = [safe_game_dict(g) for g in clf.games if match(g.get("genre", ""))]
+    if genre_matches:
+        return {
+            "intent": "genre",
+            "results": genre_matches[:15],
+            "probs": {g["genre"]: 1.0 for g in genre_matches[:15]},
+        }
+
+    # Title (must be strong match: exact or startswith)
     title_matches = [
         safe_game_dict(g)
         for g in clf.games
-        if query in g.get("name", "").lower()
+        if normalized_query == normalize_text(g.get("name", ""))  # exact
+        or normalize_text(g.get("name", "")).startswith(normalized_query + " ")  # prefix
     ]
     if title_matches:
         return {
@@ -42,12 +72,8 @@ def search(q: str = Query(..., min_length=1)):
             "probs": {g["name"]: 1.0 for g in title_matches[:15]},
         }
 
-    # 2️⃣ Publisher match
-    publisher_matches = [
-        safe_game_dict(g)
-        for g in clf.games
-        if query in g.get("publisher", "").lower()
-    ]
+    # Publisher
+    publisher_matches = [safe_game_dict(g) for g in clf.games if match(g.get("publisher", ""))]
     if publisher_matches:
         return {
             "intent": "publisher",
@@ -55,12 +81,8 @@ def search(q: str = Query(..., min_length=1)):
             "probs": {g["publisher"]: 1.0 for g in publisher_matches[:15]},
         }
 
-    # 3️⃣ Description-based match (e.g. character names, story, etc.)
-    desc_matches = [
-        safe_game_dict(g)
-        for g in clf.games
-        if query in g.get("description", "").lower()
-    ]
+    # Description
+    desc_matches = [safe_game_dict(g) for g in clf.games if match(g.get("description", ""))]
     if desc_matches:
         return {
             "intent": "description",
@@ -68,10 +90,9 @@ def search(q: str = Query(..., min_length=1)):
             "probs": {g["name"]: 0.8 for g in desc_matches[:15]},
         }
 
-    # 4️⃣ Fallback: Naive Bayes prediction
+    # AI fallback (Naive Bayes)
     predicted_label, probs = clf.predict(query)
-
-    if predicted_label is None:
+    if not predicted_label:
         return {
             "intent": "none",
             "results": [],
@@ -79,14 +100,14 @@ def search(q: str = Query(..., min_length=1)):
             "message": "No confident match found.",
         }
 
-    # 5️⃣ Match games by predicted label (genre/publisher/name)
     results = [
         safe_game_dict(g)
         for g in clf.games
-        if predicted_label.lower() in g.get("genre", "").lower()
-        or predicted_label.lower() in g.get("publisher", "").lower()
-        or predicted_label.lower() in g.get("name", "").lower()
-        or predicted_label.lower() in g.get("description", "").lower()
+        if match(g.get("genre", ""))
+        or match(g.get("publisher", ""))
+        or match(g.get("tags", ""))
+        or match(g.get("name", ""))
+        or match(g.get("description", ""))
     ]
 
     return {

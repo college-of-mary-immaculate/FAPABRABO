@@ -84,3 +84,4 @@ def tokenize(text, use_bigrams=False, min_len=2):
         tokens.extend(bigrams)
 
     return tokens
+ 
