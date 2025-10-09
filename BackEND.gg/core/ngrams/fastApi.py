@@ -69,3 +69,6 @@ def search(q: str = Query(..., min_length=1)):
     ]
 
     return {"intent":"description","results":results[:15],"probs":probs}
+
+
+print()
