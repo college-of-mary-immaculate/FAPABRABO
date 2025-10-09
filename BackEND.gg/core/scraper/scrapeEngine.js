@@ -11,7 +11,18 @@ const LINKS_FILE = "./links.txt";
 const ERROR_LOG = "./errors.log";
 
 
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
+function cleanText(text) {
+  return text ? text.replace(/[\r\n]+/g, " ").trim() : "";
+}
+
+function logError(url, err) {
+  const message = `${url}}\n`;
+  fs.appendFileSync(ERROR_LOG, message);
+}
 
 
 function loadLinks(filePath) {
@@ -24,14 +35,6 @@ function loadLinks(filePath) {
     .split("\n")
     .map(line => line.trim())
     .filter(line => line.length > 0 && !line.startsWith("#"));
-}
-
-function delay(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-function cleanText(text) {
-  return text ? text.replace(/[\r\n]+/g, " ").trim() : "";
 }
 
 function loadExistingGames(filePath) {
@@ -69,10 +72,6 @@ function saveGames(filePath, games) {
   console.log(`💾 Saved ${cleanedGames.length} games to ${filePath}`);
 }
 
-function logError(url, err) {
-  const message = `${url}}\n`;
-  fs.appendFileSync(ERROR_LOG, message);
-}
 
 
 async function fetchHTML(browser, url) {
@@ -80,7 +79,7 @@ async function fetchHTML(browser, url) {
   const USER_AGENT = randomUserAgent();
   await page.setUserAgent(USER_AGENT);
 
-  await page.goto(url, { waitUntil: "networkidle2" });
+  await page.goto(url, { waitUntil: "networkidle2", timeout: 60000 });
 
   //  expand the game description if it exists
   try {

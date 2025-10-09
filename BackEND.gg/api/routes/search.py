@@ -2,7 +2,7 @@ import os
 from fastapi import APIRouter, Query
 from core.naivebayes.model import GenreClassifier
 
-DATASET_PATH = os.getenv("DATASET_PATH", "core/scraper/datasets/all_games.csv")
+DATASET_PATH = os.getenv("DATASET_PATH", "core/scraper/datasets/old_all_games.csv")
 
 router = APIRouter()
 
