@@ -65,7 +65,7 @@ def search(q: str = Query(..., min_length=1)):
         ranked_docs = rank_documents(query, tag_matches)
         if ranked_docs:
             return {
-                "intent": "tfidf_ranked",
+                "intent": "tfidf_ranked_tags",
                 "results": [safe_game_dict(d) for d, _ in ranked_docs],
                 "probs": {safe_game_dict(d)["name"]: round(s, 4) for d, s in ranked_docs},
             }
@@ -76,7 +76,7 @@ def search(q: str = Query(..., min_length=1)):
         ranked_docs = rank_documents(query, genre_matches)
         if ranked_docs:
             return {
-                "intent": "tfidf_ranked",
+                "intent": "tfidf_ranked_genre",
                 "results": [safe_game_dict(d) for d, _ in ranked_docs],
                 "probs": {safe_game_dict(d)["name"]: round(s, 4) for d, s in ranked_docs},
             }
@@ -91,7 +91,7 @@ def search(q: str = Query(..., min_length=1)):
         ranked_docs = rank_documents(query, title_matches)
         if ranked_docs:
             return {
-                "intent": "tfidf_ranked",
+                "intent": "tfidf_ranked_title",
                 "results": [safe_game_dict(d) for d, _ in ranked_docs],
                 "probs": {safe_game_dict(d)["name"]: round(s, 4) for d, s in ranked_docs},
             }
@@ -102,7 +102,7 @@ def search(q: str = Query(..., min_length=1)):
         ranked_docs = rank_documents(query, publisher_matches)
         if ranked_docs:
             return {
-                "intent": "tfidf_ranked",
+                "intent": "tfidf_ranked_publisher",
                 "results": [safe_game_dict(d) for d, _ in ranked_docs],
                 "probs": {safe_game_dict(d)["name"]: round(s, 4) for d, s in ranked_docs},
             }
@@ -113,7 +113,7 @@ def search(q: str = Query(..., min_length=1)):
         ranked_docs = rank_documents(query, desc_matches)
         if ranked_docs:
             return {
-                "intent": "tfidf_ranked",
+                "intent": "tfidf_ranked_description",
                 "results": [safe_game_dict(d) for d, _ in ranked_docs],
                 "probs": {safe_game_dict(d)["name"]: round(s, 4) for d, s in ranked_docs},
             }
