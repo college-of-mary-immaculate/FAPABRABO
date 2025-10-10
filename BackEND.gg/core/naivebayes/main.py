@@ -2,7 +2,7 @@ from model import GenreClassifier
 
 # --- MAIN EXECUTION ---
 if __name__ == "__main__":
-    DATA_FILE = "BackEND.gg/core/scraper/datasets/all_games.csv"
+    DATA_FILE = "BackEND.gg/datasets/all_games.csv"
 
     clf = GenreClassifier()
     clf.train(DATA_FILE)  # train once on your dataset

@@ -15,7 +15,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include ngrams router with prefix
+# Include routers
 app.include_router(ngrams_router)
 app.include_router(search_router)
 

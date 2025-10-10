@@ -6,7 +6,7 @@ import { parse } from "csv-parse/sync";
 import { vGameScrape } from "./parser/videoGameScraper.js";
 import { randomUserAgent } from "./utils/randomUserAgent.js";
 
-const OUTPUT_FILE = "./datasets/all_games.csv";
+const OUTPUT_FILE = "datasets/all_games.csv";
 const LINKS_FILE = "./links.txt";
 const ERROR_LOG = "./errors.log";
 
