@@ -17,19 +17,26 @@ clf.train(DATASET_PATH)
 # ----------------- Helper -----------------
 def safe_game_dict(g):
     """Normalize MongoDB document to a clean, frontend-safe format."""
+    
     if not isinstance(g, dict):
         return {}
     return {
         "id": str(g.get("_id", "")),
         "name": g.get("name", "Unknown Game"),
         "publisher": g.get("publisher", "Unknown Publisher"),
-        "genre": g.get("genre", ""),
+        "genre": normalize_text(g.get("genre", "")),
         "tags": g.get("tags", ""),
-        "description": g.get("description", "No description available."),
+        "description": limit_desc_words(g.get("description"), 50),
         "thumbnail": g.get("image", "/placeholder.svg"),
         "siteUrl": g.get("url", "#"),
     }
 
+def limit_desc_words(text, max_words=None):
+    text = str(text or "No description available.").strip()
+    words = text.split()
+    if len(words) <= max_words:
+        return text
+    return " ".join(words[:max_words]) + "..."
 
 def normalize_text(text: str):
     clean = re.sub(r"[^a-z0-9 ]", " ", str(text).lower())

@@ -1,23 +1,20 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';  // ✅ use navigate
 import './GamegleHomepage.css';
 
 interface GameSuggestion {
   id: string;
   name: string;
-  category?: string; // optional
+  category?: string;
 }
 
-interface GamegleHomepageProps {
-  onNavigateToGames?: () => void;
-}
-
-const GamegleHomepage: React.FC<GamegleHomepageProps> = ({ onNavigateToGames }) => {
+const GamegleHomepage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
   const [filteredGames, setFilteredGames] = useState<GameSuggestion[]>([]);
   const searchRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();  // ✅ use React Router
 
-  // Fetch suggestions whenever searchQuery changes
   useEffect(() => {
     const fetchSuggestions = async () => {
       if (searchQuery.trim()) {
@@ -25,16 +22,15 @@ const GamegleHomepage: React.FC<GamegleHomepageProps> = ({ onNavigateToGames }) 
           const response = await fetch(`http://127.0.0.1:8000/suggest?q=${searchQuery}`);
           if (response.ok) {
             const data = await response.json();
-            // Map backend response to our suggestion objects
             const mapped = data.suggestions.map((token: string, index: number) => ({
               id: String(index),
-              name: `${searchQuery.trim()} ${token}`
+              name: `${searchQuery.trim()} ${token}`,
             }));
             setFilteredGames(mapped);
-            setShowDropdown(mapped.length > 0); // always show dropdown if there are suggestions
+            setShowDropdown(mapped.length > 0);
           }
         } catch (error) {
-          console.error("Error fetching suggestions:", error);
+          console.error('Error fetching suggestions:', error);
           setFilteredGames([]);
           setShowDropdown(false);
         }
@@ -44,22 +40,9 @@ const GamegleHomepage: React.FC<GamegleHomepageProps> = ({ onNavigateToGames }) 
       }
     };
 
-  //   const fetchSearchResults = async (query: string) => {
-  //   try {
-  //     const res = await fetch(`http://127.0.0.1:8000/search?q=${query}`)
-  //     if (res.ok) {
-  //       const data = await res.json()
-  //       setSearchResults(data.results || [])
-  //     }
-  //   } catch (err) {
-  //     console.error("Error fetching search results:", err)
-  //   }
-  // }
-
     fetchSuggestions();
   }, [searchQuery]);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
@@ -72,31 +55,28 @@ const GamegleHomepage: React.FC<GamegleHomepageProps> = ({ onNavigateToGames }) 
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
-    setShowDropdown(true); // show dropdown whenever typing
+    setShowDropdown(true);
   };
 
+  // ✅ Instead of reloading, navigate and pass query
   const handleGameSelect = (game: GameSuggestion) => {
     setSearchQuery(game.name);
     setShowDropdown(false);
-    if (onNavigateToGames) onNavigateToGames();
-    else window.location.href = `/games?q=${encodeURIComponent(game.name)}`;
-    console.log("Redirecting to:", `/games?q=${encodeURIComponent(game.name)}`);
+    navigate(`/games`, { state: { query: game.name } });
   };
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (filteredGames.length > 0) handleGameSelect(filteredGames[0]);
-  };
-
-  const handleInputFocus = () => {
-    if (searchQuery.trim() && filteredGames.length > 0) {
-      setShowDropdown(true);
+    if (searchQuery.trim()) {
+      navigate(`/games`, { state: { query: searchQuery } });
+      setShowDropdown(false);
     }
   };
 
   return (
     <div className="gamegle-homepage">
       <div className="google-logo">GAMEGLE</div>
+
       <div className="search-container" ref={searchRef}>
         <form onSubmit={handleSearchSubmit}>
           <input
@@ -104,13 +84,9 @@ const GamegleHomepage: React.FC<GamegleHomepageProps> = ({ onNavigateToGames }) 
             className="search-box"
             value={searchQuery}
             onChange={handleSearchChange}
-            onFocus={handleInputFocus}
             placeholder="Search Games"
             autoComplete="off"
           />
-          <svg className="search-icon" viewBox="0 0 24 24" fill="#9aa0a6">
-            <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
-          </svg>
         </form>
 
         {showDropdown && filteredGames.length > 0 && (
@@ -121,17 +97,7 @@ const GamegleHomepage: React.FC<GamegleHomepageProps> = ({ onNavigateToGames }) 
                 className="dropdown-item"
                 onClick={() => handleGameSelect(game)}
               >
-                <svg className="dropdown-icon" viewBox="0 0 24 24" fill="#9aa0a6">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                </svg>
-                <div className="dropdown-text">
-                  <span className="highlight">{game.name}</span>
-                  {game.category && (
-                    <span style={{ color: '#9aa0a6', fontSize: '12px', marginLeft: '8px' }}>
-                      {game.category}
-                    </span>
-                  )}
-                </div>
+                <span className="highlight">{game.name}</span>
               </div>
             ))}
           </div>
