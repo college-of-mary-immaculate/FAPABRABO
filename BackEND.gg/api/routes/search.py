@@ -1,135 +1,146 @@
 import os
+import re
 from fastapi import APIRouter, Query
 from core.naivebayes.model import GenreClassifier
-from core.tfidf.retrival_tf import docs  # MongoDB TF-IDF documents
-from core.utils.preprocess import tokenize  # your tokenizer
-from math import sqrt
+from core.tfidf.consine import rank_documents
+from core.tfidf.retrival_tf import docs  # MongoDB docs with tfidf_vector
+
 
 DATASET_PATH = os.getenv("DATASET_PATH", "datasets/all_games.csv")
 
 router = APIRouter()
+
 clf = GenreClassifier()
 clf.train(DATASET_PATH)
 
+
 # ----------------- Helper -----------------
 def safe_game_dict(g):
-    """Return all CSV fields safely for frontend."""
+    """Normalize MongoDB document to a clean, frontend-safe format."""
+    if not isinstance(g, dict):
+        return {}
     return {
-        "id": str(hash(g.get("name", ""))),
-        "name": g.get("name", ""),
-        "publisher": g.get("publisher", ""),
+        "id": str(g.get("_id", "")),
+        "name": g.get("name", "Unknown Game"),
+        "publisher": g.get("publisher", "Unknown Publisher"),
         "genre": g.get("genre", ""),
-        "description": g.get("description", "No description available"),
+        "tags": g.get("tags", ""),
+        "description": g.get("description", "No description available."),
         "thumbnail": g.get("image", "/placeholder.svg"),
-        "siteUrl": g.get("url", "/"),
+        "siteUrl": g.get("url", "#"),
     }
 
-# ----------------- TF-IDF Cosine Similarity -----------------
-def cosine_similarity_tfidf(query_vector, doc_vector):
-    common_terms = set(query_vector.keys()) & set(doc_vector.keys())
-    numerator = sum(query_vector[t] * doc_vector[t] for t in common_terms)
-    sum1 = sum(v ** 2 for v in query_vector.values())
-    sum2 = sum(v ** 2 for v in doc_vector.values())
-    denominator = sqrt(sum1) * sqrt(sum2)
-    return numerator / denominator if denominator else 0
 
-def rank_tfidf(query_tokens, docs, top_k=15):
-    q_count = {}
-    for t in query_tokens:
-        q_count[t] = q_count.get(t, 0) + 1
-    q_vector = {t: v / len(query_tokens) for t, v in q_count.items()}
+def normalize_text(text: str):
+    clean = re.sub(r"[^a-z0-9 ]", " ", str(text).lower())
+    clean = re.sub(r"\s+", " ", clean)
+    return clean.strip()
 
-    scored_docs = []
-    for doc in docs:
-        tfidf = doc.get("tfidf_vector", {})
-        # Skip docs without a proper TF-IDF vector
-        if not isinstance(tfidf, dict):
-            continue
-        score = cosine_similarity_tfidf(q_vector, tfidf)
-        scored_docs.append((score, doc))
 
-    scored_docs.sort(key=lambda x: x[0], reverse=True)
-    return [d for score, d in scored_docs[:top_k] if score > 0]
+def match_field(field_value: str, query: str):
+    return query in normalize_text(field_value)
 
-# ----------------- Search endpoint -----------------
+
+
+
+# ----------------- SEARCH ENDPOINT -----------------
 @router.get("/search")
 def search(q: str = Query(..., min_length=1)):
     query = q.lower().strip()
-    query_tokens = tokenize(query)
+    normalized_query = re.sub(r"[^a-z0-9 ]", " ", query).replace(",", " ")
+    normalized_query = re.sub(r"\s+", " ", normalized_query)
 
-    # Retrieve all documents from MongoDB
-    mongo_docs = list(docs)  # docs already imported from retrival_tf
+    def normalize_text(text: str):
+        clean = re.sub(r"[^a-z0-9 ]", " ", text.lower())
+        clean = re.sub(r"\s+", " ", clean)
+        return clean.strip()
 
-    # 1️⃣ Title match
+    def match(text):
+        return normalized_query in normalize_text(text)
+    
+
+    # --- 1️⃣ TAGS ---
+    tag_matches = [g for g in docs if match_field(g.get("tags", ""), query)]
+    if tag_matches:
+        ranked_docs = rank_documents(query, tag_matches)
+        if ranked_docs:
+            return {
+                "intent": "tfidf_ranked",
+                "results": [safe_game_dict(d) for d, _ in ranked_docs],
+                "probs": {safe_game_dict(d)["name"]: round(s, 4) for d, s in ranked_docs},
+            }
+
+    # --- 2️⃣ GENRE ---
+    genre_matches = [g for g in docs if match_field(g.get("genre", ""), query)]
+    if genre_matches:
+        ranked_docs = rank_documents(query, genre_matches)
+        if ranked_docs:
+            return {
+                "intent": "tfidf_ranked",
+                "results": [safe_game_dict(d) for d, _ in ranked_docs],
+                "probs": {safe_game_dict(d)["name"]: round(s, 4) for d, s in ranked_docs},
+            }
+
+    # --- 3️⃣ TITLE ---
     title_matches = [
-        g for g in mongo_docs
-        if isinstance(g.get("name"), str) and query in g.get("name", "").lower()
+        g for g in docs
+        if normalize_text(g.get("name", "")) == query
+        or normalize_text(g.get("name", "")).startswith(query + " ")
     ]
     if title_matches:
-        ranked = rank_tfidf(query_tokens, title_matches)
-        return {
-            "intent": "title",
-            "results": [safe_game_dict(g) for g in ranked],
-            "probs": {g["name"]: 1.0 for g in ranked},
-        }
+        ranked_docs = rank_documents(query, title_matches)
+        if ranked_docs:
+            return {
+                "intent": "tfidf_ranked",
+                "results": [safe_game_dict(d) for d, _ in ranked_docs],
+                "probs": {safe_game_dict(d)["name"]: round(s, 4) for d, s in ranked_docs},
+            }
 
-    # 2️⃣ Publisher match
-    publisher_matches = [
-        g for g in mongo_docs
-        if isinstance(g.get("publisher"), str) and query in g.get("publisher", "").lower()
-    ]
+    # --- 4️⃣ PUBLISHER ---
+    publisher_matches = [g for g in docs if match_field(g.get("publisher", ""), query)]
     if publisher_matches:
-        ranked = rank_tfidf(query_tokens, publisher_matches)
-        return {
-            "intent": "publisher",
-            "results": [safe_game_dict(g) for g in ranked],
-            "probs": {g["publisher"]: 1.0 for g in ranked},
-        }
+        ranked_docs = rank_documents(query, publisher_matches)
+        if ranked_docs:
+            return {
+                "intent": "tfidf_ranked",
+                "results": [safe_game_dict(d) for d, _ in ranked_docs],
+                "probs": {safe_game_dict(d)["name"]: round(s, 4) for d, s in ranked_docs},
+            }
 
-    # 3️⃣ Description match
-    desc_matches = [
-        g for g in mongo_docs
-        if isinstance(g.get("description"), str) and query in g.get("description", "").lower()
-    ]
+    # --- 5️⃣ DESCRIPTION ---
+    desc_matches = [g for g in docs if match_field(g.get("description", ""), query)]
     if desc_matches:
-        ranked = rank_tfidf(query_tokens, desc_matches)
-        return {
-            "intent": "description",
-            "results": [safe_game_dict(g) for g in ranked],
-            "probs": {g["name"]: 0.8 for g in ranked},
-        }
+        ranked_docs = rank_documents(query, desc_matches)
+        if ranked_docs:
+            return {
+                "intent": "tfidf_ranked",
+                "results": [safe_game_dict(d) for d, _ in ranked_docs],
+                "probs": {safe_game_dict(d)["name"]: round(s, 4) for d, s in ranked_docs},
+            }
 
-    # 4️⃣ TF-IDF ranking fallback on all docs
-    tfidf_results = rank_tfidf(query_tokens, mongo_docs)
-    if tfidf_results:
-        return {
-            "intent": "tfidf",
-            "results": [safe_game_dict(g) for g in tfidf_results],
-            "probs": {g["name"]: 1.0 for g in tfidf_results},
-        }
-
-    # 5️⃣ Naive Bayes fallback
+    # AI fallback (Naive Bayes)
     predicted_label, probs = clf.predict(query)
-    if predicted_label:
-        results = [
-            g for g in mongo_docs
-            if predicted_label.lower() in (g.get("genre") or "").lower()
-            or predicted_label.lower() in (g.get("publisher") or "").lower()
-            or predicted_label.lower() in (g.get("name") or "").lower()
-            or predicted_label.lower() in (g.get("description") or "").lower()
-        ]
-        ranked = rank_tfidf(query_tokens, results)
+    if not predicted_label:
         return {
-            "intent": "ai_predicted",
-            "results": [safe_game_dict(g) for g in ranked],
-            "probs": probs,
-            "predicted_label": predicted_label,
+            "intent": "none",
+            "results": [],
+            "probs": {},
+            "message": "No confident match found.",
         }
 
-    # 6️⃣ No matches
+    results = [
+        safe_game_dict(g)
+        for g in clf.games
+        if match(g.get("genre", ""))
+        or match(g.get("publisher", ""))
+        or match(g.get("tags", ""))
+        or match(g.get("name", ""))
+        or match(g.get("description", ""))
+    ]
+
     return {
-        "intent": "none",
-        "results": [],
-        "probs": {},
-        "message": "No confident match found.",
+        "intent": "ai_predicted",
+        "results": results[:15],
+        "probs": probs,
+        "predicted_label": predicted_label,
     }
