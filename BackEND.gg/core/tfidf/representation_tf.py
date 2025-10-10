@@ -11,6 +11,7 @@ data = pd.read_csv(datasets)
 # ===== Combine ideal columns =====
 # Combine: genre + tags + publisher + description 
 data["combined_text"] = (
+    data["name"].fillna("").astype(str) + " " +
     data["genre"].fillna("").astype(str) + " " +
     data["tags"].fillna("").astype(str) + " " +
     data["publisher"].fillna("").astype(str) + " " +

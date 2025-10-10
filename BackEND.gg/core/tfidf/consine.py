@@ -1,7 +1,7 @@
 import math
 
 def compute_tfidf_vector(text, idf_map):
-    """Compute a TF-IDF vector for a given text (no sklearn)."""
+
     words = text.lower().split()
     tf = {}
     for w in words:
@@ -55,4 +55,4 @@ def rank_documents(query, docs):
 
     # Rank by similarity
     ranked = sorted(scored, key=lambda x: x[1], reverse=True)
-    return ranked[:15]
+    return ranked[:25]

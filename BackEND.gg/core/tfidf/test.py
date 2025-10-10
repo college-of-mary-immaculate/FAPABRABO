@@ -1,21 +1,33 @@
 from api.config.config_database import db
 from .representation_tf import tfidfDocs, data
+import math
+def safe_str(val, fallback="Unknown"):
+    if val is None:
+        return fallback
+    try:
+        if math.isnan(val):
+            return fallback
+    except TypeError:
+        pass
+    return str(val)
 
 
 def test_connection():
     collection = db["vectore_store"]
     collection.delete_many({})  # optional: clear previous data
+    
+    "Add 0.0 if will Nan"
 
     for i, vec in enumerate(tfidfDocs):
         image_field = str(data.loc[i, "image"]).strip('"')  # remove extra quotes
 
         doc = {
-            "name": data.loc[i, "name"],
-            "genre": data.loc[i, "genre"],
-            "tags": data.loc[i, "tags"],
-            "publisher": data.loc[i, "publisher"],
-            "description": data.loc[i, "description"],
-            "url": data.loc[i, "url"],
+            "name": safe_str(data.loc[i, "name"]),
+            "genre": safe_str(data.loc[i, "genre"]),
+            "tags": safe_str(data.loc[i, "tags"]),
+            "publisher": safe_str(data.loc[i, "publisher"]),
+            "description": safe_str(data.loc[i, "description"]),
+            "url": safe_str(data.loc[i, "url"]),
             "image": image_field,  # now it's clean
             "tfidf_vector": vec.tolist() if hasattr(vec, "tolist") else vec
         }
