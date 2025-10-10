@@ -15,14 +15,13 @@
     position: relative;
 }
 
-/* Google Logo */
-.google-logo {
+.search-logo {
     font-size: 90px;
     font-weight: 900;
     background: linear-gradient(135deg, hsl(344, 100%, 83%), #bb439b, #53a8f7, #ff6b9d);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    margin-bottom: 50px;
+    margin-top:20%;
     text-align: center;
     letter-spacing: -5px;
 }
@@ -32,7 +31,7 @@
     width: 100%;
     max-width: 584px;
     position: relative;
-    margin-bottom: 60px;
+    margin-bottom: 20px;
 }
 
 .search-box {
@@ -137,80 +136,4 @@
 
 .resource-link:hover {
     text-decoration: underline;
-}
-
-@media (max-width: 768px) {
-    .google-logo {
-        font-size: 70px;
-        margin-bottom: 30px;
-    }
-
-    .search-container {
-        max-width: 90%;
-        margin-bottom: 30px;
-    }
-
-    .search-box {
-        height: 44px;
-        font-size: 14px;
-    }
-
-    .all-mode-btn {
-        position: static;
-        transform: none;
-        margin-top: 15px;
-        align-self: center;
-    }
-
-    .button-container {
-        flex-direction: column;
-        align-items: center;
-        gap: 12px;
-        margin-bottom: 30px;
-    }
-
-    .search-btn {
-        width: 150px;
-    }
-
-    .links-container {
-        bottom: 20px;
-        padding: 0 20px;
-    }
-}
-
-@media (max-width: 480px) {
-    .google-logo {
-        font-size: 60px;
-    }
-
-    .search-container {
-        max-width: 95%;
-    }
-
-    .search-box {
-        height: 42px;
-        padding: 0 45px 0 40px;
-        font-size: 14px;
-    }
-
-    .voice-search,
-    .camera-search {
-        width: 20px;
-        height: 20px;
-    }
-
-    .voice-search {
-        right: 40px;
-    }
-
-    .camera-search {
-        right: 12px;
-    }
-
-    .search-icon {
-        width: 18px;
-        height: 18px;
-        left: 12px;
-    }
 }

@@ -1,8 +1,10 @@
 "use client"
 
 import type React from "react"
+
 import { useState, useRef, useEffect } from "react"
-import "./App.css"
+import './App.css';
+import Footer from './footerSection.tsx'
 
 interface SearchResult {
   id: string
@@ -15,15 +17,15 @@ interface SearchResult {
   siteUrl: string
 }
 
-interface GamesPageProps {
-  onNavigateToHome?: () => void
-}
+type TabType =
+  | "action"| "adventure" | "strategy"| "simulation"| "casual" | "rpg" | "games" | "indie" | "sports" | "board-games"| "survival"
 
-const GamesPage: React.FC<GamesPageProps> = ({ onNavigateToHome }) => {
+export default function GamesPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [showDropdown, setShowDropdown] = useState(false)
   const [suggestions, setSuggestions] = useState<string[]>([])
   const [searchResults, setSearchResults] = useState<SearchResult[]>([])
+  const [activeTab, setActiveTab] = useState<TabType>("action")
   const searchRef = useRef<HTMLDivElement>(null)
 
   // 🔎 Fetch suggestions from backend
@@ -98,9 +100,9 @@ const GamesPage: React.FC<GamesPageProps> = ({ onNavigateToHome }) => {
   }
 
   const navigateToHome = () => {
-    if (onNavigateToHome) onNavigateToHome()
-    else window.location.href = "/"
+    window.location.href = "/"
   }
+
 
   return (
     <div className="container">
@@ -110,6 +112,7 @@ const GamesPage: React.FC<GamesPageProps> = ({ onNavigateToHome }) => {
         </div>
         <div className="search-bar" ref={searchRef}>
           <form onSubmit={handleSearchSubmit}>
+            
             <input
               type="text"
               value={searchQuery}
@@ -118,6 +121,7 @@ const GamesPage: React.FC<GamesPageProps> = ({ onNavigateToHome }) => {
               placeholder="Search Games"
               autoComplete="off"
             />
+          
           </form>
 
           {showDropdown && suggestions.length > 0 && (
@@ -132,6 +136,57 @@ const GamesPage: React.FC<GamesPageProps> = ({ onNavigateToHome }) => {
         </div>
       </header>
 
+      <nav className="nav-tabs">
+        <button className={`nav-tab ${activeTab === "action" ? "active" : ""}`} onClick={() => setActiveTab("action")}>
+          Action
+        </button>
+        <button
+          className={`nav-tab ${activeTab === "adventure" ? "active" : ""}`}
+          onClick={() => setActiveTab("adventure")}
+        >
+          Adventure
+        </button>
+        <button
+          className={`nav-tab ${activeTab === "strategy" ? "active" : ""}`}
+          onClick={() => setActiveTab("strategy")}
+        >
+          Strategy
+        </button>
+        <button
+          className={`nav-tab ${activeTab === "simulation" ? "active" : ""}`}
+          onClick={() => setActiveTab("simulation")}
+        >
+          Simulation
+        </button>
+        <button className={`nav-tab ${activeTab === "casual" ? "active" : ""}`} onClick={() => setActiveTab("casual")}>
+          Casual
+        </button>
+        <button className={`nav-tab ${activeTab === "rpg" ? "active" : ""}`} onClick={() => setActiveTab("rpg")}>
+          RPG
+        </button>
+        <button className={`nav-tab ${activeTab === "games" ? "active" : ""}`} onClick={() => setActiveTab("games")}>
+          Games
+        </button>
+        <button className={`nav-tab ${activeTab === "indie" ? "active" : ""}`} onClick={() => setActiveTab("indie")}>
+          Indie
+        </button>
+        <button className={`nav-tab ${activeTab === "sports" ? "active" : ""}`} onClick={() => setActiveTab("sports")}>
+          Sports
+        </button>
+        <button
+          className={`nav-tab ${activeTab === "board-games" ? "active" : ""}`}
+          onClick={() => setActiveTab("board-games")}
+        >
+          Board Games
+        </button>
+        <button
+          className={`nav-tab ${activeTab === "survival" ? "active" : ""}`}
+          onClick={() => setActiveTab("survival")}
+        >
+          Survival
+        </button>
+      </nav>
+
       <main className="main-content">
         <div className="search-results">
           {searchResults.map((result) => (
@@ -140,7 +195,9 @@ const GamesPage: React.FC<GamesPageProps> = ({ onNavigateToHome }) => {
                 <div className="result-header">
                   <div className="site-info">
                     <div className="site-details">
-                      <a className="site-name" href={result.siteUrl} target="_blank" rel="noopener noreferrer">{result.siteName}</a>
+                      <a className="site-name" href={result.siteUrl} target="_blank" rel="noopener noreferrer">
+                        {result.siteName}
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -156,8 +213,7 @@ const GamesPage: React.FC<GamesPageProps> = ({ onNavigateToHome }) => {
           ))}
         </div>
       </main>
+      <Footer />
     </div>
   )
 }
-
-export default GamesPage
