@@ -3,7 +3,7 @@ import math
 import os
 from collections import Counter
 from core.utils.preprocess import tokenize   # your custom tokenizer handles contractions + stopwords
-
+from math import sqrt
 # ===== Load dataset =====
 datasets = os.getenv("DATASET_PATH", "datasets/all_games.csv")
 data = pd.read_csv(datasets)
@@ -50,5 +50,6 @@ tfList = [computeTF(wordDicts[i], bow_list[i]) for i in range(len(bow_list))]
 idfs = computeIDF(wordDicts)
 tfidfDocs = [computeTFIDF(tfList[i], idfs) for i in range(len(bow_list))]
 print("✅ TF-IDF ready.")
+
 
 # https://www.freecodecamp.org/news/how-to-process-textual-data-using-tf-idf-in-python-cd2bbc0a94a3

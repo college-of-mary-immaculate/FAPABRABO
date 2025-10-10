@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom"
 import "./App.css"
 
 interface SearchResult {
-  id: string
+  _id: string
   name: string
   publisher: string
   genre: string
@@ -14,7 +14,6 @@ interface SearchResult {
   thumbnail: string
   siteName: string
   siteUrl: string
-  tags?: string[]
 }
 
 interface GamesPageProps {
@@ -216,7 +215,7 @@ const GamesPage: React.FC<GamesPageProps> = ({ onNavigateToHome }) => {
             </div>
           ) : (
             searchResults.map((result) => (
-              <div key={result.id} className="search-result-item">
+              <div key={result._id} className="search-result-item">
                 <div className="result-content">
                   <div className="result-header">
                     <div className="site-info">
@@ -243,9 +242,7 @@ const GamesPage: React.FC<GamesPageProps> = ({ onNavigateToHome }) => {
                       {result.name}
                     </a>
                   </h3>
-
                   <span className="site-genre">{result.genre}</span>
-                  {result.tags && <p className="site-tags">Tags: {result.tags.join(", ")}</p>}
                   <p className="publisher-name">Publisher: {result.publisher}</p>
                   <p className="result-description">{result.description}</p>
                 </div>
