@@ -31,4 +31,45 @@ if __name__ == "__main__":
     test_connection()
 
 
-# FAPABRABO\BackEND.gg\api> venv\Scripts\activate    
+# from bson import ObjectId
+# from api.config.config_database import db
+# import json
+
+# def get_game_by_id(game_id: str):
+#     collection = db["vectore_store"]
+    
+#     # Try to convert to ObjectId; fallback to string query if fails
+#     try:
+#         query_id = ObjectId(game_id)
+#     except Exception:
+#         query_id = game_id
+
+#     doc = collection.find_one({"_id": query_id})
+#     if not doc:
+#         return None
+
+#     # safe_game_dict helper
+#     try:
+#         genre = json.loads(doc.get("genre", "[]"))
+#     except json.JSONDecodeError:
+#         genre = []
+
+#     try:
+#         tags = json.loads(doc.get("tags", "[]"))
+#     except json.JSONDecodeError:
+#         tags = []
+
+#     return {
+#         "id": str(doc.get("_id", "")),
+#         "name": doc.get("name", ""),
+#         "publisher": doc.get("publisher", ""),
+#         "genre": genre,
+#         "tags": tags,
+#         "description": doc.get("description", "No description available"),
+#         "thumbnail": doc.get("image", "/placeholder.svg"),
+#         "siteUrl": doc.get("url", "/"),
+#     }
+
+# # Example usage:
+# game = get_game_by_id("68e81b4d967c07aa12681375")
+# print(game)

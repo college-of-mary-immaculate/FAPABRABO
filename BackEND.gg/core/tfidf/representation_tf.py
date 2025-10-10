@@ -2,10 +2,10 @@ import pandas as pd
 import math
 import os
 from collections import Counter
-from .preprocess import tokenize   # your custom tokenizer handles contractions + stopwords
+from core.utils.preprocess import tokenize   # your custom tokenizer handles contractions + stopwords
 
 # ===== Load dataset =====
-datasets = os.getenv("DATASET_PATH", "core/scraper/datasets/all_games.csv")
+datasets = os.getenv("DATASET_PATH", "datasets/all_games.csv")
 data = pd.read_csv(datasets)
 
 # ===== Combine ideal columns =====
@@ -50,56 +50,5 @@ tfList = [computeTF(wordDicts[i], bow_list[i]) for i in range(len(bow_list))]
 idfs = computeIDF(wordDicts)
 tfidfDocs = [computeTFIDF(tfList[i], idfs) for i in range(len(bow_list))]
 print("✅ TF-IDF ready.")
-
-# ===== Cosine Similarity =====
-def cosine_similarity(doc_vec, query_vec):
-    dot = sum(doc_vec.get(w, 0.0) * qv for w, qv in query_vec.items())
-    norm_doc = math.sqrt(sum(v * v for v in doc_vec.values()))
-    norm_query = math.sqrt(sum(v * v for v in query_vec.values()))
-    return dot / (norm_doc * norm_query) if norm_doc and norm_query else 0.0
-
-
-# ===== Search Function =====
-# def search(query, top_n=5, save_csv=False):
-#     q_tokens = tokenize(query)
-#     q_wd = Counter(q_tokens)
-#     q_tf = computeTF(q_wd, q_tokens)s
-#     q_tfidf = computeTFIDF(q_tf, idfs)
-
-#     scores = [(i, cosine_similarity(doc_vec, q_tfidf)) for i, doc_vec in enumerate(tfidfDocs)]
-#     scores = sorted(scores, key=lambda x: x[1], reverse=True)
-
-#     results = [
-#         {
-#             "rank": idx + 1,
-#             "name": data.loc[i, "name"],
-#             "genre": data.loc[i, "genre"],
-#             "tags": data.loc[i, "tags"],
-#             "publisher": data.loc[i, "publisher"],
-#             "description": data.loc[i, "description"],
-#             "url": data.loc[i, "url"],
-#             "similarity": sim,
-#         }
-#         for idx, (i, sim) in enumerate(scores[:top_n])
-#     ]
-
-#     if save_csv:
-#         pd.DataFrame(results).to_csv("search_results.csv", index=False)
-#         print("💾 Results saved to search_results.csv")
-
-#     return results
-
-# # ===== Example usage =====
-# if __name__ == "__main__":
-#     while True:
-#         query_text = input("\n🔎 Enter search query (or 'exit' to quit): ")
-#         if query_text.lower() == "exit":
-#             break
-#         results = search(query_text, top_n=5, save_csv=True)
-#         print("\n📌 Top results:")
-#         for res in results:
-#             print(f"{res['rank']}. {res['name']} | Genre: {res['genre']} | Tags: {res['tags']} | Publisher: {res['publisher']} | Description: {res['description']} | Score: {res['similarity']:.4f}")
-#         print("------")
-
 
 # https://www.freecodecamp.org/news/how-to-process-textual-data-using-tf-idf-in-python-cd2bbc0a94a3
