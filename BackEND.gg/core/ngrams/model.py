@@ -3,6 +3,7 @@ import os
 from collections import Counter
 from core.ngrams.levenshtein import levenshtein_distance  
 
+
 class NGrams:
     def __init__(self):
         self.unigram_counts = Counter()
@@ -66,13 +67,14 @@ class NGrams:
         """Return the closest vocab token to the given token using Levenshtein."""
         if token in self.vocab:
             return token
-        best, best_dist = token, len(token)  # start with max reasonable distance
+        best, best_dist = token, len(token)
         for v in self.vocab:
             d = levenshtein_distance(token, v)
             if d < best_dist:
                 best, best_dist = v, d
         return best
 
+    # ---------------------------------------------------------------
     def suggest_next(self, context: str, top_k: int = 5, return_corrected=False):
         """
         Suggest next tokens given current context.
@@ -108,3 +110,61 @@ class NGrams:
         suggestions = [w for w in candidates if w not in ("<s>", "<s/>")][:top_k]
 
         return (corrected_context, suggestions) if return_corrected else suggestions
+
+    # ---------------------------------------------------------------
+    def search_suggestions(self, query: str, top_k: int = 5):
+        """
+        Return Google-like phrase suggestions based on query prefix.
+        Avoids token duplication (e.g., 'silent hill hill 2').
+        """
+        query = query.lower().strip()
+        if not query:
+            return []
+
+        tokens = query.split()
+        # Auto-correct last token
+        if tokens:
+            tokens[-1] = self.autocomplete_token(tokens[-1])
+
+        # Determine search window
+        if len(tokens) >= 2:
+            w1, w2 = tokens[-2], tokens[-1]
+        elif len(tokens) == 1:
+            w1, w2 = "<s>", tokens[-1]
+        else:
+            w1, w2 = "<s>", "<s>"
+
+        # Collect trigram continuations (for full phrases)
+        candidates = []
+        for (a, b, c), count in self.trigram_counts.items():
+            if a == w1 and b == w2:
+                phrase = f"{' '.join(tokens)} {c}".strip()
+                candidates.append((phrase, count))
+
+        # If no trigram found, fall back to bigram
+        if not candidates:
+            for (a, b), count in self.bigram_counts.items():
+                if a == w2:
+                    phrase = f"{' '.join(tokens[:-1])} {a} {b}".strip()
+                    candidates.append((phrase, count))
+
+        # Fallback: prefix-based vocab
+        if not candidates:
+            prefix = tokens[-1]
+            for w in self.vocab:
+                if w.startswith(prefix):
+                    candidates.append((f"{' '.join(tokens[:-1])} {w}".strip(), self.unigram_counts[w]))
+
+        # Rank and clean
+        seen = set()
+        results = []
+        for phrase, freq in sorted(candidates, key=lambda x: x[1], reverse=True):
+            phrase = phrase.replace("<s>", "").replace("<s/>", "").strip()
+            if phrase not in seen:
+                seen.add(phrase)
+                results.append(phrase)
+            if len(results) >= top_k:
+                break
+
+        return results
+

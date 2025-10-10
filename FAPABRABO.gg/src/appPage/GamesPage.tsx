@@ -13,6 +13,7 @@ interface SearchResult {
   thumbnail: string
   siteName: string
   siteUrl: string
+  tags?: string[]
 }
 
 interface GamesPageProps {
@@ -26,6 +27,7 @@ const GamesPage: React.FC<GamesPageProps> = ({ onNavigateToHome }) => {
   const [searchResults, setSearchResults] = useState<SearchResult[]>([])
   const [hasSearched, setHasSearched] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [activeTab, setActiveTab] = useState<string | null>(null)
   const searchRef = useRef<HTMLDivElement>(null)
 
   // 🔎 Fetch suggestions from backend
@@ -122,6 +124,21 @@ const GamesPage: React.FC<GamesPageProps> = ({ onNavigateToHome }) => {
     else window.location.href = "/"
   }
 
+  // 🎮 Categories
+  const categories = [
+    "action",
+    "adventure",
+    "strategy",
+    "simulation",
+    "casual",
+    "rpg",
+    "games",
+    "indie",
+    "sports",
+    "board-games",
+    "survival",
+  ]
+
   return (
     <div className="container">
       <header className="header">
@@ -168,6 +185,22 @@ const GamesPage: React.FC<GamesPageProps> = ({ onNavigateToHome }) => {
         </div>
       </header>
 
+      {/* 🔹 Navigation Tabs */}
+      <nav className="nav-tabs">
+        {categories.map((tab) => (
+          <button
+            key={tab}
+            className={`nav-tab ${activeTab === tab ? "active" : ""}`}
+            onClick={() => {
+              setActiveTab(tab)
+              fetchSearchResults(tab)
+            }}
+          >
+            {tab.charAt(0).toUpperCase() + tab.slice(1)}
+          </button>
+        ))}
+      </nav>
+
       <main className="main-content">
         <div className="search-results">
           {loading ? (
@@ -195,7 +228,7 @@ const GamesPage: React.FC<GamesPageProps> = ({ onNavigateToHome }) => {
                       </div>
                     </div>
                   </div>
-                  
+
                   <h3 className="result-title">
                     <a
                       href={result.siteUrl}
@@ -207,6 +240,10 @@ const GamesPage: React.FC<GamesPageProps> = ({ onNavigateToHome }) => {
                     </a>
                   </h3>
                   <span className="site-genre">{result.genre}</span>
+<<<<<<< HEAD
+=======
+                  <p className="site-tags">Tags: {result.tags}</p>
+>>>>>>> 993c1ecd54c69399cf91caca480db32b9ef177ae
                   <p className="publisher-name">Publisher: {result.publisher}</p>
                   <p className="result-description">{result.description}</p>
                 </div>
