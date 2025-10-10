@@ -13,7 +13,6 @@ interface SearchResult {
   thumbnail: string
   siteName: string
   siteUrl: string
-  tags?: string[]
 }
 
 interface GamesPageProps {
@@ -240,10 +239,6 @@ const GamesPage: React.FC<GamesPageProps> = ({ onNavigateToHome }) => {
                     </a>
                   </h3>
                   <span className="site-genre">{result.genre}</span>
-<<<<<<< HEAD
-=======
-                  <p className="site-tags">Tags: {result.tags}</p>
->>>>>>> 993c1ecd54c69399cf91caca480db32b9ef177ae
                   <p className="publisher-name">Publisher: {result.publisher}</p>
                   <p className="result-description">{result.description}</p>
                 </div>
