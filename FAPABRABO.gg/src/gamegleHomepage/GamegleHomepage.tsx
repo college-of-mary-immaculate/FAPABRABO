@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';  // ✅ use navigate
 import './GamegleHomepage.css';
+import TopRightIcons from '../components/dots';
 
 interface GameSuggestion {
   id: string;
@@ -75,7 +76,11 @@ const GamegleHomepage: React.FC = () => {
 
   return (
     <div className="gamegle-homepage">
+
+      <TopRightIcons />
       <div className="google-logo">GAMEGLE</div>
+
+
 
       <div className="search-container" ref={searchRef}>
         <form onSubmit={handleSearchSubmit}>

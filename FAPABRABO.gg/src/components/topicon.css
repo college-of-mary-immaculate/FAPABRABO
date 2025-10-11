@@ -1,0 +1,29 @@
+.top-right-icons {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #444;
+  transition: color 0.2s ease, transform 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-btn:hover {
+  color: #000;
+  transform: scale(1.1);
+}
+
+.icon-btn svg {
+  width: 22px;
+  height: 22px;
+}

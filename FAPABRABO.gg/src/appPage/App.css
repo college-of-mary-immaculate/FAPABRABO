@@ -242,7 +242,83 @@ body {
 .nav-tab.active {
   color: #4a9eff;
   border-bottom-color: #4a9eff;
+
 }
+
+/* 🎮 GRID LAYOUT FOR POPULAR GAMES */
+.section-title {
+  font-size: 28px;
+  font-weight: 700;
+  text-align: left;
+  margin-bottom: 24px;
+  background: linear-gradient(90deg, #ff6b9d, #53a8f7, #bb439b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 2px;
+}
+
+/* The grid container */
+.publisher-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 24px;
+  margin-top: 20px;
+}
+
+/* Each card */
+.publisher-card {
+  background-color: #0e0e0e;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 0 12px rgba(88, 132, 255, 0.15);
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Small top colored dots like macOS window */
+.card-header {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.dot.red {
+  background-color: #ff5f56;
+}
+.dot.yellow {
+  background-color: #ffbd2e;
+}
+.dot.green {
+  background-color: #27c93f;
+}
+
+/* Card content */
+.card-content h3 {
+  font-size: 16px;
+  color: #ffffff;
+  margin-bottom: 6px;
+}
+
+.card-content p {
+  font-size: 13px;
+  color: #b0b0b0;
+}
+
+/* Hover effects */
+.publisher-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 20px rgba(83, 168, 247, 0.25);
+}
+
 
 
 /* Responsive design for mobile */
