@@ -81,16 +81,60 @@ export default function PublisherDetail() {
   return (
     <div className="container">
       {/* Header */}
-      <header className="header">
-        <div
-          onClick={() => (window.location.href = "/")}
-          className="logo"
-          style={{ cursor: "pointer" }}
+      <header
+          className="header"
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            padding: "10px 20px",
+          }}
         >
-          GAMEGLE
-        </div>
-        <h2 className="page-title">{decodeURIComponent(name || "")}</h2>
-      </header>
+          {/* 🔹 Left section: Logo and Title */}
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <div
+              onClick={() => (window.location.href = "/")}
+              className="logo"
+              style={{
+                cursor: "pointer",
+                fontWeight: "bold",
+                fontSize: "1.5rem",
+                background: "linear-gradient(to right, #ff4dcf, #4d9fff)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
+            >
+              GAMEGLE
+            </div>
+
+            <h2 className="page-title" style={{ fontSize: "1.2rem", color: "#fff" }}>
+              {decodeURIComponent(name || "")}
+            </h2>
+          </div>
+
+          {/* 🔹 Right section: Return button */}
+          <button
+            onClick={() => window.history.back()}
+            className="return-button"
+            style={{
+              backgroundColor: "#0078ff",
+              color: "white",
+              border: "none",
+              borderRadius: "8px",
+              padding: "8px 14px",
+              fontSize: "0.9rem",
+              cursor: "pointer",
+              transition: "0.3s",
+            }}
+            onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#005fcc")}
+            onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#0078ff")}
+          >
+            ← Return
+          </button>
+        </header>
+
+
+      
 
       {/* 🔹 Tabs */}
       <nav className="nav-tabs">
